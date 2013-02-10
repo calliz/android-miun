@@ -1,0 +1,3 @@
+Testat i:
+Emulator: Android 4.1, API 16, 320x480, mdpi
+Telefon: HTC Desire HD, Android 2.2
