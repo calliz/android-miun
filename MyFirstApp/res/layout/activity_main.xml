@@ -10,7 +10,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@android:color/black"
+        android:background="@drawable/textview_border"
         android:hint="@string/edit_message"
         android:textColor="@android:color/white" />
 
