@@ -5,7 +5,12 @@
     <string name="button_send">Send</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="hello_world">Hej! Jag heter Carl Bjerggaard och är 28 år. Jag läser 5:e året på 
+        Civilingenjör Informations- och Kommunikationsteknik på LTH med inriktning mot programmering. 
+        Jag har valt att läsa denna kurs eftersom kunskap i Android är något av det mest 
+        eftertraktade på arbetsmarknaden just nu och jag hoppas därför att jag kommer att lära mig rejält
+        om Android och dess grunder och få nytta av detta i arbetslivet.     </string>
     <string name="title_activity_display_message">My Message</string>
+    <string name="text">text</string>
 
 </resources>
