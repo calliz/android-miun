@@ -1,3 +1,25 @@
+Uppgift 1
+Kärnan hanterar bl.a. kommunikationen med enhetens hårdvara som t.ex. processor, minne och hårddisk och fungerar som ett mellanlager mellan enhetens hårdvara och mjukvara. Kärnan sköter minneshantering, processhantering, säkerhet, nätverksfunktioner, processer m.m. och fördelar resurser till de olika program som körs på enheten.  
+Den senaste versionen av Android är Android 4.2 Jelly Bean (API level 17) som baseras på Linux kernel 3.0.31.
+Min HTC Desire HD använder Android 2.2–2.2.3 Froyo (API level 8) som baseras på Linux kernel 2.6.32. 
+
+Uppgift 2
+Surface managern samlar olika drawing surfaces, dvs. ritytor, ritade av olika appar i olika processer och samlar dessa i en gemensam buffert för att sedan visa dessa på den gemensamma displayen vid rätt tidpunkt. Surface managern kan även kombinera 2d och 3d ytor från olika applikationer till en gemensam output. 
+
+Uppgift 3
+Dalvik VM är en Java Virtual Machine optimerad för androidenheter med låg processorkraft, små minnen etc. Till skillad från J2SE:s .class och .jar filer, använder Dalvik .dex filer med Dalvik bytecode kompilerade utifrån .class och .jar filer vilka ger en högre effektivitet i enheter med små resurser.  Dalvik hanterar flera VM processer per enhet och använder minnet väldigt effektivt. 
+
+Uppgift 4
+En Activity är Androids motsvarighet till ett fönster eller en dialogruta i en vanlig applikation på t.ex. en vanlig dator. Användaren kan interagera med gränssnittet i en aktivitet och en applikation består ofta av många olika aktiviter som vardera kan starta nya aktiviter eller låta användaren gå tillbaka till föregående aktivitet.  
+
+Uppgift 5
+En aktivitet i Android befinner sig alltid i ett av tillstånden Active, Paused, Stopped eller Dead och aktiviter i Android hanteras som en aktivitetsstack (aktivitetshög). När en ny aktivitet startas placeras den på toppen av stacken och blir den körande aktiviteten. Föregående aktivitet hamnar under denna och körs inte igen förrän den nya aktiviten avslutas. 
+När en aktivitet befinner sig i Active har den startats av användaren och körs i förgrunden så att användaren kan interagera med den. 
+I tillståndet Paused har aktiviteten startats av användaren och körs samt är synlig för användaren medan en avisering eller liknande döljer en del av skärmen.  Användaren kan därför inte interagera med aktiviteten utan endast se den bakom aviseringen/meddelandet. 
+I stadiet Stopped har aktiviteten startas av användaren och körs men är dold i bakgrunden bakom andra mer nyligen startade eller anropade aktiviteter. Aktiviteten kan här endast interagera med användaren i form av aviseringar (Notifications). 
+I stadiet Dead har aktiviteten antingen inte startats ännu eller avlutats pga. för lite minne eller liknande. 
+
+Uppgift 6
 Testat i:
 Emulator: Android 4.1, API 16, 320x480, mdpi
 Telefon: HTC Desire HD, Android 2.2
