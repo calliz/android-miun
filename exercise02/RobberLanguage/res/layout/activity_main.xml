@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
+        android:layout_alignParentTop="true"
         android:text="@string/robber_language"
         android:textColor="@android:color/white" />
 
@@ -22,28 +23,28 @@
         android:id="@+id/translate_to_button"
         style="@style/CustomButton"
         android:layout_below="@id/robber_title"
-        android:onClick=""
+        android:onClick="translateTo"
         android:text="@string/translate_to" />
 
     <Button
         android:id="@+id/translate_from_button"
         style="@style/CustomButton"
         android:layout_below="@id/translate_to_button"
-        android:onClick=""
+        android:onClick="translateFrom"
         android:text="@string/translate_from" />
 
     <Button
         android:id="@+id/about_button"
         style="@style/CustomButton"
         android:layout_below="@id/translate_from_button"
-        android:onClick=""
+        android:onClick="about"
         android:text="@string/about" />
 
     <Button
         android:id="@+id/quit_button"
         style="@style/CustomButton"
         android:layout_below="@id/about_button"
-        android:onClick=""
+        android:onClick="quit"
         android:text="@string/quit" />
 
 </RelativeLayout>

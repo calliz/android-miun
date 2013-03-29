@@ -22,6 +22,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.example.robberlanguage.TranslateToActivity"
+            android:label="@string/title_activity_translate_to" >
+        </activity>
+        <activity
+            android:name="com.example.robberlanguage.TranslateFromActivity"
+            android:label="@string/title_activity_translate_from" >
+        </activity>
+        <activity
+            android:name="com.example.robberlanguage.AboutActivity"
+            android:label="@string/title_activity_about" >
+        </activity>
     </application>
 
 </manifest>
