@@ -25,14 +25,26 @@
         <activity
             android:name="com.example.robberlanguage.TranslateToActivity"
             android:label="@string/title_activity_translate_to" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" >
+            </meta-data>
         </activity>
         <activity
             android:name="com.example.robberlanguage.TranslateFromActivity"
             android:label="@string/title_activity_translate_from" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" >
+            </meta-data>
         </activity>
         <activity
             android:name="com.example.robberlanguage.AboutActivity"
             android:label="@string/title_activity_about" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" >
+            </meta-data>
         </activity>
     </application>
 
