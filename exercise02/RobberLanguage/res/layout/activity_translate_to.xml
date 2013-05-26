@@ -51,12 +51,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_below="@id/translated_title"
-        android:clickable="false"
-        android:cursorVisible="false"
         android:focusable="false"
-        android:focusableInTouchMode="false"
+       
         android:inputType="textMultiLine"
         android:scrollbars="vertical"
         android:textColor="@android:color/white" />
 
-</RelativeLayout>
+</RelativeLayout><!-- android:clickable="false" -->
+<!-- android:cursorVisible="false" -->
+<!--  android:focusableInTouchMode="false" -->
+

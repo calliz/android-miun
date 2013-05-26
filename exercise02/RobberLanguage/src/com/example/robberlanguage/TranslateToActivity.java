@@ -11,6 +11,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -65,9 +66,30 @@ public class TranslateToActivity extends Activity {
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.context_menu, menu)
+		inflater.inflate(R.menu.context_menu, menu);
+		Toast.makeText(this, "onCreateContextMenu", Toast.LENGTH_SHORT).show();
 	}
-	
-	
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
+				.getMenuInfo();
+		
+		Toast.makeText(this, "onContextItemSelected", Toast.LENGTH_SHORT).show();
+		
+		
+		switch (item.getItemId()) {
+		case R.id.clear:
+			clearTextarea();
+			Toast.makeText(this, "clearish", Toast.LENGTH_SHORT).show();
+			return true;
+		default:
+			return super.onContextItemSelected(item);
+		}
+	}
+
+	public void clearTextarea() {
+		translatedText.getText().clear();
+	}
 
 }
