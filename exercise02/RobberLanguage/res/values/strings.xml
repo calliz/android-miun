@@ -12,5 +12,9 @@
     <string name="title_activity_translate_to">TranslateToActivity</string>
     <string name="title_activity_translate_from">TranslateFromActivity</string>
     <string name="title_activity_about">AboutActivity</string>
+    <string name="text_to_translate">Text to translate</string>
+    <string name="text_to_be_translated">Text to be translated</string>
+    <string name="translate">Translate</string>
+    <string name="translated_text">Translated text</string>
 
 </resources>
