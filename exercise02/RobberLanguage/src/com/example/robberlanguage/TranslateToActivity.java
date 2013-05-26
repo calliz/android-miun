@@ -67,21 +67,16 @@ public class TranslateToActivity extends Activity {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.context_menu, menu);
-		Toast.makeText(this, "onCreateContextMenu", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
-		
-		Toast.makeText(this, "onContextItemSelected", Toast.LENGTH_SHORT).show();
-		
-		
+
 		switch (item.getItemId()) {
 		case R.id.clear:
 			clearTextarea();
-			Toast.makeText(this, "clearish", Toast.LENGTH_SHORT).show();
 			return true;
 		default:
 			return super.onContextItemSelected(item);
