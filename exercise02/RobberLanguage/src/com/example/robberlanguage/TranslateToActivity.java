@@ -1,5 +1,6 @@
 package com.example.robberlanguage;
 
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -69,9 +70,10 @@ public class TranslateToActivity extends Activity {
 		Pattern pattern = Pattern.compile("[a-z&&[^aeiou]]", 2);
 		Matcher matcher = pattern.matcher(input);
 		StringBuffer sb = new StringBuffer();
-		
-		while(matcher.find()){
-			matcher.appendReplacement(sb, matcher.group() + "o" + matcher.group());			
+
+		while (matcher.find()) {
+			matcher.appendReplacement(sb, matcher.group() + "o"
+					+ matcher.group().toLowerCase());
 		}
 		matcher.appendTail(sb);
 		return sb.toString();

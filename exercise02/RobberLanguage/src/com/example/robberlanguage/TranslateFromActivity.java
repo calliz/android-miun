@@ -2,6 +2,7 @@ package com.example.robberlanguage;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -66,18 +67,22 @@ public class TranslateFromActivity extends Activity {
 	}
 
 	private String stripRobberChars(String input) {
-		Pattern pattern = Pattern.compile("([a-z&&[^aeiou]])&&\1", 2);
-		
-		cocalollole
-		
-		Matcher matcher = pattern.matcher(input);
 		StringBuffer sb = new StringBuffer();
+		try {
+			Pattern pattern = Pattern.compile("([a-z&&[^aeiou]])(o\\1)", 2);
 
-		while (matcher.find()) {
-			matcher.appendReplacement(sb,
-					matcher.group() + "o" + matcher.group());
+			Matcher matcher = pattern.matcher(input);
+
+			while (matcher.find()) {
+				matcher.appendReplacement(sb, matcher.group(1));
+			}
+			matcher.appendTail(sb);
+		} catch (PatternSyntaxException e) {
+			// Syntax error in regular expression
 		}
-		matcher.appendTail(sb);
+		if (sb.length() == 0) {
+			sb.append("No match");
+		}
 		return sb.toString();
 	}
 
