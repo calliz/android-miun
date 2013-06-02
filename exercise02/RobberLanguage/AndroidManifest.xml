@@ -46,6 +46,10 @@
                 android:value=".MainActivity" >
             </meta-data>
         </activity>
+        <activity
+            android:name="com.example.robberlanguage.AboutDialogFragment"
+            android:label="@string/title_activity_about_dialog_fragment" >
+        </activity>
     </application>
 
 </manifest>

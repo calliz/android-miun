@@ -1,5 +1,8 @@
 package com.example.robberlanguage;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Build;
@@ -55,10 +58,23 @@ public class TranslateToActivity extends Activity {
 					Toast.LENGTH_SHORT).show();
 		} else {
 			Editable input = translateText.getText();
-			translatedText.append("\n" + input);
+			String result = appendRobberChars(input.toString());
+			translatedText.append("\n" + result);
 			input.clear();
 		}
 
+	}
+
+	private String appendRobberChars(String input) {
+		Pattern pattern = Pattern.compile("[a-z&&[^aeiou]]", 2);
+		Matcher matcher = pattern.matcher(input);
+		StringBuffer sb = new StringBuffer();
+		
+		while(matcher.find()){
+			matcher.appendReplacement(sb, matcher.group() + "o" + matcher.group());			
+		}
+		matcher.appendTail(sb);
+		return sb.toString();
 	}
 
 	@Override
