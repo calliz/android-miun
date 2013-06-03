@@ -11,57 +11,32 @@
 
     <TextView
         android:id="@+id/translate_to_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/TextView.Small"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="10dp"
-        android:text="@string/text_to_translate"
-        android:textColor="@android:color/white" />
+        android:text="@string/text_to_translate" />
 
     <EditText
         android:id="@+id/translate_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/EditText.Small"
         android:layout_below="@id/translate_to_title"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/textview_border"
-        android:hint="@string/text_to_be_translated"
-        android:singleLine="true"
-        android:textColor="@android:color/white" />
+        android:hint="@string/text_to_be_translated" />
 
     <Button
         android:id="@+id/translate_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        style="@style/Button.Small"
         android:layout_below="@id/translate_text"
-        android:background="@drawable/textview_border"
         android:onClick="translateText"
-        android:text="@string/translate"
-        android:textColor="@android:color/white" />
+        android:text="@string/translate" />
 
     <TextView
         android:id="@+id/translated_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/TextView.Small"
         android:layout_below="@id/translate_button"
-        android:layout_marginBottom="10dp"
-        android:text="@string/translated_text"
-        android:textColor="@android:color/white" />
+        android:text="@string/translated_text" />
 
     <EditText
         android:id="@+id/translated_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@id/translated_title"
-        android:background="@drawable/textview_border"
-        android:clickable="false"
-        android:cursorVisible="false"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:inputType="textMultiLine"
-        android:scrollbars="vertical"
-        android:textColor="@android:color/white" />
+        style="@style/EditText.Large"
+        android:layout_below="@id/translated_title" />
 
 </RelativeLayout>

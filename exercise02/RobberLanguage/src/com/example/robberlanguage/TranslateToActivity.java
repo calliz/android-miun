@@ -73,7 +73,7 @@ public class TranslateToActivity extends Activity {
 
 		while (matcher.find()) {
 			matcher.appendReplacement(sb, matcher.group() + "o"
-					+ matcher.group().toLowerCase());
+					+ matcher.group().toLowerCase(Locale.ENGLISH));
 		}
 		matcher.appendTail(sb);
 		return sb.toString();
