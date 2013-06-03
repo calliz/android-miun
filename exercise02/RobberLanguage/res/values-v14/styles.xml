@@ -8,13 +8,14 @@
         <!-- API 14 theme customizations can go here. -->
 
         <item name="android:windowBackground">@android:color/black</item>
-        <item name="android:colorBackground">@android:color/black</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_marginBottom">10dp</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:background">@android:color/black</item>
+
+        <!-- set default widget styles -->
+        <item name="android:alertDialogTheme">@style/AlertDialogStyle</item>
     </style>
 
     <style name="TextView" parent="@style/Theme.NoBackground">
@@ -69,6 +70,11 @@
         <item name="android:inputType">textMultiLine</item>
         <item name="android:scrollbars">vertical</item>
         <item name="android:layout_alignParentBottom">true</item>
+    </style>
+
+    <style name="AlertDialogStyle" parent="@android:style/Theme.Holo.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:layout_marginBottom">0dp</item>
     </style>
 
 </resources>
