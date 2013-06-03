@@ -3,7 +3,6 @@
 
     <string name="app_name">RobberLanguage</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
     <string name="robber_language">Robber Language</string>
     <string name="translate_to">Translate to</string>
     <string name="translate_from">Translate from</string>
@@ -11,7 +10,6 @@
     <string name="quit">Quit</string>
     <string name="title_activity_translate_to">TranslateToActivity</string>
     <string name="title_activity_translate_from">TranslateFromActivity</string>
-    <string name="title_activity_about">AboutActivity</string>
     <string name="text_to_translate">Text to translate</string>
     <string name="text_to_be_translated">Text to be translated</string>
     <string name="translate">Translate</string>
@@ -21,7 +19,6 @@
     <string name="text_to_be_retranslated">Text to be retranslated</string>
     <string name="retranslate">Retranslate</string>
     <string name="retranslated_text">Retranslated text</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_about_dialog_fragment">AboutDialogFragment</string>
     <string name="about_robber_language">The Robber Language is a Swedish language game. It became popular after the books about Kalle Blomkvist by Astrid Lindgren, where the children use it as a code, both at play and in solving actual crimes. It was used by robbers on the Swedish island Gotland as they didn\'t want the Visby Garrison to understand what their plans were. The principle is easy enough. Every consonant (spelling matters, not pronunciation) is doubled, and an o is inserted in-between. Vowels are left intact. (From Wikipedia)</string>
     <string name="ok_in_about_dialog">OK</string>
