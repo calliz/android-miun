@@ -26,7 +26,10 @@
         <item name="android:layout_centerHorizontal">true</item>
     </style>
 
-    <style name="TextView.Small"></style>
+    <style name="TextView.Small">
+         <item name="android:textColor">@android:color/white</item>
+        
+    </style>
 
     <style name="TextView.Large">
         <item name="android:background">@drawable/textview_border</item>
