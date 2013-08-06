@@ -27,8 +27,7 @@
     </style>
 
     <style name="TextView.Small">
-         <item name="android:textColor">@android:color/white</item>
-        
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="TextView.Large">
