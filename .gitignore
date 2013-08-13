@@ -21,3 +21,6 @@ local.properties
 #*.pdf
 #*.zip
 #*.docx
+
+#Binaries
+binaries/

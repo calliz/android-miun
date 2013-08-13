@@ -1,21 +1,16 @@
 <resources>
 
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
-
-    <style name="Theme.NoBackground" parent="android:Theme.Light">
+    <!-- Base application theme, dependent on API level. This theme is replaced -->
+    <!-- by AppBaseTheme from res/values-vXX/styles.xml on newer devices. -->
+    <style name="Theme.NoBackground" parent="android:Theme">
 
         <!-- Theme customizations available in newer API levels can go in -->
         <!-- res/values-vXX/styles.xml, while customizations related to -->
         <!-- backward-compatibility can go here. -->
 
-        <item name="android:windowBackground">@android:color/black</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:layout_marginBottom">0dp</item>
         <item name="android:textColor">@android:color/white</item>
 
         <!-- set default widget styles -->
@@ -25,14 +20,10 @@
     <style name="TextView" parent="@style/Theme.NoBackground">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">10dp</item>
-        <item name="android:textColor">@android:color/white</item>
         <item name="android:layout_centerHorizontal">true</item>
     </style>
 
-    <style name="TextView.Small">
-        <item name="android:textColor">@android:color/white</item>
-    </style>
+    <style name="TextView.Small"></style>
 
     <style name="TextView.Large">
         <item name="android:background">@drawable/textview_border</item>
@@ -46,29 +37,26 @@
         <!-- <item name="android:layout_alignParentRight">true</item> -->
     </style>
 
-    <style name="Button">
-        <item name="android:textColor">@android:color/white</item>
+    <style name="Button" parent="@style/Theme.NoBackground">
         <item name="android:layout_height">wrap_content</item>
     </style>
 
     <style name="Button.Small">
-        <item name="android:textColor">@android:color/white</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_alignParentRight">true</item>
     </style>
 
-    <style name="Button.Large" parent="@style/Theme.NoBackground">
+    <style name="Button.Large">
         <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginBottom">10dp</item>
         <item name="android:background">@drawable/textview_border</item>
         <item name="android:layout_width">match_parent</item>
     </style>
 
     <style name="EditText" parent="@style/Theme.NoBackground">
-        <item name="android:textColor">@android:color/white</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">10dp</item>
         <item name="android:background">@drawable/textview_border</item>
     </style>
 
@@ -88,7 +76,6 @@
 
     <style name="AlertDialogStyle" parent="@android:style/Theme.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:layout_marginBottom">0dp</item>
     </style>
 
 </resources>
