@@ -16,11 +16,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class TranslateFromActivity extends Activity {
 
-	private EditText reTranslatedText;
+	private TextView reTranslatedText;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -36,7 +37,7 @@ public class TranslateFromActivity extends Activity {
 
 		// Context menu. Could be changed to Contextual Action Mode for
 		// Android3.0 +
-		reTranslatedText = (EditText) findViewById(R.id.retranslated_text);
+		reTranslatedText = (TextView) findViewById(R.id.retranslated_text);
 		registerForContextMenu(reTranslatedText);
 	}
 
@@ -106,7 +107,7 @@ public class TranslateFromActivity extends Activity {
 	}
 
 	public void clearTextarea() {
-		reTranslatedText.getText().clear();
+		((Editable) reTranslatedText.getText()).clear();
 	}
 
 }
