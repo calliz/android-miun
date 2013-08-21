@@ -33,19 +33,24 @@
         android:layout_below="@id/retranslate_button"
         android:text="@string/retranslated_text" />
 
-    <ScrollView
+    <!-- <ScrollView -->
+    <!-- android:layout_alignParentBottom="true" -->
+    <!-- android:layout_alignParentLeft="true" -->
+    <!-- android:layout_alignParentRight="true" -->
+    <!-- android:layout_below="@id/retranslated_title" -->
+    <!-- android:fillViewport="true" -->
+    <!-- android:scrollbars="vertical" > -->
+
+    <EditText
+        android:id="@+id/retranslated_text"
+        style="@style/EditText.Large"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@id/retranslated_title"
-        android:fillViewport="true"
-        android:scrollbars="vertical" >
-
-        <TextView
-            android:id="@+id/retranslated_text"
-            style="@style/TextView.Large"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </ScrollView>
+        android:scrollbars="vertical" />
+    <!-- </ScrollView> -->
 
 </RelativeLayout>

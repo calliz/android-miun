@@ -63,11 +63,13 @@
     </style>
 
     <style name="EditText.Large">
+        <item name="android:gravity">top|left</item>
+        <item name="android:longClickable">false</item>
         <item name="android:clickable">false</item>
         <item name="android:cursorVisible">false</item>
         <item name="android:focusable">false</item>
         <item name="android:focusableInTouchMode">false</item>
-        <item name="android:inputType">textMultiLine</item>
+        <item name="android:inputType">none</item>
         <item name="android:scrollbars">vertical</item>
         <item name="android:layout_alignParentBottom">true</item>
     </style>

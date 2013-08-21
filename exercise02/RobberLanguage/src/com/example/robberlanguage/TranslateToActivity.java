@@ -16,12 +16,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class TranslateToActivity extends Activity {
 
-	private TextView translatedText;
+	private EditText translatedText;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -37,7 +36,7 @@ public class TranslateToActivity extends Activity {
 
 		// Context menu. Could be changed to Contextual Action Mode for
 		// Android3.0 +
-		translatedText = (TextView) findViewById(R.id.translated_text);
+		translatedText = (EditText) findViewById(R.id.translated_text);
 		registerForContextMenu(translatedText);
 	}
 
@@ -55,7 +54,7 @@ public class TranslateToActivity extends Activity {
 	public void translateText(View view) {
 		EditText translateText = (EditText) findViewById(R.id.translate_text);
 		if (translateText.getText().length() == 0) {
-			Toast.makeText(this, "There is nothing to translate!",
+			Toast.makeText(this, R.string.toastMessage,
 					Toast.LENGTH_SHORT).show();
 		} else {
 			Editable input = translateText.getText();
@@ -67,7 +66,7 @@ public class TranslateToActivity extends Activity {
 	}
 
 	private String appendRobberChars(String input) {
-		Pattern pattern = Pattern.compile("[a-z&&[^aeiou]]", 2);
+		Pattern pattern = Pattern.compile(getString(R.string.compileToPattern), 2);
 		Matcher matcher = pattern.matcher(input);
 		StringBuffer sb = new StringBuffer();
 
@@ -83,6 +82,8 @@ public class TranslateToActivity extends Activity {
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.setHeaderTitle(R.string.clear_text);
+		menu.clear();
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.context_menu, menu);
 	}
@@ -100,7 +101,6 @@ public class TranslateToActivity extends Activity {
 	}
 
 	public void clearTextarea() {
-		((Editable) translatedText.getText()).clear();
+		translatedText.getText().clear();
 	}
-
 }

@@ -16,12 +16,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class TranslateFromActivity extends Activity {
 
-	private TextView reTranslatedText;
+	private EditText reTranslatedText;
 
 	@SuppressLint("NewApi")
 	@Override
@@ -37,7 +36,7 @@ public class TranslateFromActivity extends Activity {
 
 		// Context menu. Could be changed to Contextual Action Mode for
 		// Android3.0 +
-		reTranslatedText = (TextView) findViewById(R.id.retranslated_text);
+		reTranslatedText = (EditText) findViewById(R.id.retranslated_text);
 		registerForContextMenu(reTranslatedText);
 	}
 
@@ -55,7 +54,7 @@ public class TranslateFromActivity extends Activity {
 	public void retranslateText(View view) {
 		EditText reTranslateText = (EditText) findViewById(R.id.retranslate_text);
 		if (reTranslateText.getText().length() == 0) {
-			Toast.makeText(this, "There is nothing to retranslate!",
+			Toast.makeText(this, R.string.toastMessage,
 					Toast.LENGTH_SHORT).show();
 		} else {
 			Editable input = reTranslateText.getText();
@@ -69,7 +68,7 @@ public class TranslateFromActivity extends Activity {
 	private String stripRobberChars(String input) {
 		StringBuffer sb = new StringBuffer();
 		try {
-			Pattern pattern = Pattern.compile("([a-z&&[^aeiou]])(o\\1)", 2);
+			Pattern pattern = Pattern.compile(getString(R.string.compileFromPattern), 2);
 
 			Matcher matcher = pattern.matcher(input);
 
@@ -90,6 +89,8 @@ public class TranslateFromActivity extends Activity {
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.setHeaderTitle(R.string.clear_text);
+		menu.clear();
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.context_menu, menu);
 	}
@@ -107,7 +108,6 @@ public class TranslateFromActivity extends Activity {
 	}
 
 	public void clearTextarea() {
-		((Editable) reTranslatedText.getText()).clear();
+		reTranslatedText.getText().clear();
 	}
-
 }
