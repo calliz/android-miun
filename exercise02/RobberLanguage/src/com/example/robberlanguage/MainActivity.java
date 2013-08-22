@@ -23,13 +23,16 @@ public class MainActivity extends FragmentActivity {
 
 	/** Called when the user clicks the Translate to button */
 	public void translateTo(View view) {
-		Intent intent = new Intent(this, TranslateToActivity.class);
+		Intent intent = new Intent(this, TranslateActivity.class);
+		intent.putExtra("EXTRA_SCREEN_NBR", 0);
 		startActivity(intent);
 	}
 
 	/** Called when the user clicks the Translate from button */
 	public void translateFrom(View view) {
-		Intent intent = new Intent(this, TranslateFromActivity.class);
+		Intent intent = new Intent(this, TranslateActivity.class);
+		intent.putExtra("EXTRA_SCREEN_NBR", 1);
+		intent.getExtras().getInt("EXTRA_SCREEN_NBR");
 		startActivity(intent);
 	}
 

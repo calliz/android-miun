@@ -25,6 +25,14 @@
 
     <style name="TextView.Small"></style>
 
+    <style name="TextView.Small.Translate">
+        <item name="android:text">@string/text_to_translate</item>
+    </style>
+
+    <style name="TextView.Small.Retranslate">
+        <item name="android:text">@string/text_to_retranslate</item>
+    </style>
+
     <style name="TextView.Large">
         <item name="android:background">@drawable/textview_border</item>
         <item name="android:clickable">false</item>
@@ -33,6 +41,10 @@
         <item name="android:focusableInTouchMode">false</item>
         <item name="android:inputType">none</item>
     </style>
+
+    <style name="TextView.Large.Translate"></style>
+
+    <style name="TextView.Large.Retranslate"></style>
 
     <style name="Button" parent="@style/Theme.NoBackground">
         <item name="android:layout_height">wrap_content</item>
@@ -62,6 +74,14 @@
         <item name="android:singleLine">true</item>
     </style>
 
+    <style name="EditText.Small.Translate">
+        <item name="android:hint">@string/text_to_be_translated</item>
+    </style>
+
+    <style name="EditText.Small.Retranslate">
+        <item name="android:hint">@string/text_to_be_retranslated</item>
+    </style>
+
     <style name="EditText.Large">
         <item name="android:gravity">top|left</item>
         <item name="android:longClickable">false</item>
@@ -70,9 +90,17 @@
         <item name="android:focusable">false</item>
         <item name="android:focusableInTouchMode">false</item>
         <item name="android:inputType">none</item>
-        <item name="android:scrollbars">vertical</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:scrollbars">vertical</item>
     </style>
+
+    <style name="EditText.Large.Translate"></style>
+
+    <style name="EditText.Large.Retranslate"></style>
 
     <style name="AlertDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>

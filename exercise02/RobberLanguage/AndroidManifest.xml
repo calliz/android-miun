@@ -23,24 +23,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.robberlanguage.TranslateToActivity"
-            android:label="@string/title_activity_translate_to" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" >
-            </meta-data>
-        </activity>
-        <activity
-            android:name="com.example.robberlanguage.TranslateFromActivity"
-            android:label="@string/title_activity_translate_from" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" >
-            </meta-data>
-        </activity>
-        <activity
             android:name="com.example.robberlanguage.AboutDialogFragment"
             android:label="@string/title_activity_about_dialog_fragment" >
+        </activity>
+        <activity
+            android:name="com.example.robberlanguage.TranslateActivity"
+            android:label="@string/title_activity_translate" >
         </activity>
     </application>
 
