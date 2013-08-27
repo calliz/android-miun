@@ -1,11 +1,14 @@
 package com.example.yrparser;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,38 +18,75 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.app.SherlockListFragment;
 
 public class MainActivity extends SherlockFragmentActivity implements
 		ActionBar.TabListener {
 
+	/**
+	 * The {@link android.support.v4.view.PagerAdapter} that will provide
+	 * fragments for each of the three primary sections of the app. We use a
+	 * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which
+	 * will keep every loaded fragment in memory. If this becomes too memory
+	 * intensive, it may be best to switch to a
+	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
+	 */
 	private MyFragmentAdapter myFragmentAdapter;
+
+	/**
+	 * The {@link ViewPager} that will display the three primary sections of the
+	 * app, one at a time.
+	 */
 	private ViewPager viewPager;
 	private static final int NUM_VIEWS = 3;
+	private static final String FORECAST = "http://www.yr.no/sted/Sverige/Sk%C3%A5ne/Malm%C3%B6/forecast.xml";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		// Create the adapter that will return a fragment for each of the three
+		// primary sections
+		// of the app.
 		myFragmentAdapter = new MyFragmentAdapter(getSupportFragmentManager());
 
+		// Set up the action bar.
 		final ActionBar actionBar = getSupportActionBar();
+
+		// Specify that the Home/Up button should not be enabled, since there is
+		// no hierarchical
+		// parent.
 		actionBar.setHomeButtonEnabled(false);
+
+		// Specify that we will be displaying tabs in the action bar.
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
+		// Set up the ViewPager, attaching the adapter and setting up a listener
+		// for when the
+		// user swipes between sections.
 		viewPager = (ViewPager) findViewById(R.id.pager);
 		viewPager.setAdapter(myFragmentAdapter);
 		viewPager
 				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 					@Override
 					public void onPageSelected(int position) {
-						// select the corresponding tab
+						// When swiping between different app sections, select
+						// the corresponding tab.
+						// We can also use ActionBar.Tab#select() to do this if
+						// we have a reference to the
+						// Tab.
 						actionBar.setSelectedNavigationItem(position);
 					}
 				});
 
-		// add tab to actionbar for all sections in app
+		// For each of the sections in the app, add a tab to the action bar.
 		for (int i = 0; i < myFragmentAdapter.getCount(); i++) {
+			// Create a tab with text corresponding to the page title defined by
+			// the adapter.
+			// Also specify this Activity object, which implements the
+			// TabListener interface, as the
+			// listener for when this tab is selected.
 			actionBar.addTab(actionBar.newTab()
 					.setText(myFragmentAdapter.getPageTitle(i))
 					.setTabListener(this));
@@ -61,6 +101,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onTabSelected(ActionBar.Tab tab,
 			FragmentTransaction fragmentTransaction) {
+		// When the given tab is selected, switch to the corresponding page in
+		// the ViewPager.
 		viewPager.setCurrentItem(tab.getPosition());
 	}
 
@@ -69,7 +111,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 			FragmentTransaction fragmentTransaction) {
 	}
 
-	public static class MyFragmentAdapter extends FragmentPagerAdapter {
+	/**
+	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+	 * one of the primary sections of the app.
+	 */
+	public static class MyFragmentAdapter extends FragmentStatePagerAdapter {
 
 		public MyFragmentAdapter(FragmentManager fm) {
 			super(fm);
@@ -92,7 +138,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	}
 
-	public static class ArrayListFragment extends ListFragment {
+	public static class ArrayListFragment extends SherlockListFragment {
 		private int position;
 
 		/**
@@ -129,7 +175,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			View v = inflater.inflate(R.layout.fragment_pager_list, container,
 					false);
 			View tv = v.findViewById(R.id.text);
-			((TextView) tv).setText("Fragment #" + position);
+			((TextView) tv).setText("Fragment #" + (position + 1));
 			return v;
 		}
 
