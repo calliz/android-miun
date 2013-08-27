@@ -1,8 +1,5 @@
 package com.example.yrparser;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
