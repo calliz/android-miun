@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.yrparser.WeatherXMLParser"
+            android:name="com.example.yrparser.ForecastXMLParser"
             android:label="@string/title_activity_xmlparser" >
         </activity>
     </application>

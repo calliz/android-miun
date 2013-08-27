@@ -1,5 +1,5 @@
 package com.example.yrparser;
 
-public class WeatherXMLParser {
+public class Forecast {
 
 }
