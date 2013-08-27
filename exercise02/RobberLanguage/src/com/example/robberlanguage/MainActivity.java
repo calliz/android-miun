@@ -32,7 +32,6 @@ public class MainActivity extends FragmentActivity {
 	public void translateFrom(View view) {
 		Intent intent = new Intent(this, TranslateActivity.class);
 		intent.putExtra("EXTRA_SCREEN_NBR", 1);
-		intent.getExtras().getInt("EXTRA_SCREEN_NBR");
 		startActivity(intent);
 	}
 

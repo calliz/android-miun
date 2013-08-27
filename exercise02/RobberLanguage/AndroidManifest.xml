@@ -28,7 +28,13 @@
         </activity>
         <activity
             android:name="com.example.robberlanguage.TranslateActivity"
-            android:label="@string/title_activity_translate" >
+            android:label="@string/title_activity_translate"
+            android:parentActivityName="com.example.robberlanguage.MainActivity" >
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.robberlanguage.MainActivity" />
         </activity>
     </application>
 
