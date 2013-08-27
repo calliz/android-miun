@@ -45,6 +45,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	 */
 	private ViewPager viewPager;
 	private List<Forecast> forecastList;
+	private ForecastAdapter forecastAdapter;
 
 	private static final int NUM_TABS = 3;
 	private static final String FORECAST = "http://www.yr.no/sted/Sverige/Sk%C3%A5ne/Malm%C3%B6/forecast.xml";
@@ -215,7 +216,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		@Override
 		protected SimpleAdapter doInBackground(String... forecastParams) {
 			// Only one param for testing. Maybe more params later
-			List<HashMap<String, String>> forecastList = null;
+			
 			forecastList = new ForecastXMLParser().parse(forecastParams);
 
 			/** Keys used in Hashmap */
