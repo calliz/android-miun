@@ -33,24 +33,24 @@ public class ForecastAdapter extends ArrayAdapter<ForecastData> {
 			row = inflater.inflate(layoutResourceId, parent, false);
 
 			holder = new WeatherHolder();
-			holder.imgIcon = (ImageView) row.findViewById(R.id.imgIcon);
-			holder.txtTitle = (TextView) row.findViewById(R.id.txtTitle);
+			holder.symbol = (ImageView) row.findViewById(R.id.symbol);
+			holder.info = (TextView) row.findViewById(R.id.info);
 
 			row.setTag(holder);
 		} else {
 			holder = (WeatherHolder) row.getTag();
 		}
 
-		ForecastData weather = data[position];
-		holder.txtTitle.setText(weather.title);
-		holder.imgIcon.setImageResource(weather.icon);
+		ForecastData forecastData = data[position];
+		holder.symbol.setImageResource(forecastData.symbol);
+		holder.info.setText(forecastData.info);
 
 		return row;
 	}
 
 	static class WeatherHolder {
-		ImageView imgIcon;
-		TextView txtTitle;
+		ImageView symbol;
+		TextView info;
 	}
 
 }

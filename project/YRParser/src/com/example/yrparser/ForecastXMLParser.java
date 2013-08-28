@@ -12,6 +12,8 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import android.util.Log;
+
 public class ForecastXMLParser {
 	private XmlPullParserFactory parserFactory;
 	private XmlPullParser parser;
@@ -42,13 +44,13 @@ public class ForecastXMLParser {
 		urlStream = downloadUrl(forecastURL);
 		parser.setInput(urlStream, null);
 		int eventType = parser.getEventType();
-		forecast = null;
 		forecastList = new ArrayList<Forecast>();
 		String tagName;
 		int nbrAttributes = 0;
 
 		while (eventType != XmlPullParser.END_DOCUMENT) {
 			tagName = parser.getName();
+			nbrAttributes = parser.getAttributeCount();
 
 			switch (eventType) {
 			case XmlPullParser.START_DOCUMENT:
@@ -70,15 +72,27 @@ public class ForecastXMLParser {
 					// create new Forecast()
 					forecast = new Forecast();
 
+					Log.d("ForecastXMLParser:TIME TAG", "Forecast created\n");
+
 					for (int i = 0; i < nbrAttributes; i++) {
+						Log.d("ForecastXMLParser:parser.getAttributeName()", parser.getAttributeName(i));
 						if (parser.getAttributeName(i).equals("from")) {
 							// set from time in Forecast
+							Log.d("ForecastXMLParser:TIME TAG",
+									"from attribute: "
+											+ parser.getAttributeValue(i));
 							forecast.setTimeFrom(parser.getAttributeValue(i));
 						} else if (parser.getAttributeName(i).equals("to")) {
 							// set to time in Forecast
+							Log.d("ForecastXMLParser:TIME TAG",
+									"to attribute: "
+											+ parser.getAttributeValue(i));
 							forecast.setTimeTo(parser.getAttributeValue(i));
 						} else if (parser.getAttributeName(i).equals("period")) {
 							// set period in Forecast
+							Log.d("ForecastXMLParser:TIME TAG",
+									"period attribute: "
+											+ parser.getAttributeValue(i));
 							forecast.setTimePeriod(parser.getAttributeValue(i));
 						}
 					}
@@ -154,6 +168,7 @@ public class ForecastXMLParser {
 			}
 			eventType = parser.next();
 		}
+		Log.d("ForecastXMLParser", forecastList.size() + " forecasts created\n");
 		return forecastList;
 	}
 
