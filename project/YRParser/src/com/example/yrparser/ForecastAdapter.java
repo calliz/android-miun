@@ -13,9 +13,9 @@ public class ForecastAdapter extends ArrayAdapter<ForecastData> {
 
 	private Context context;
 	private int layoutResourceId;
-	private ForecastData[] data = null;
+	private ForecastData data[] = null;
 
-	public ForecastAdapter(Activity context, int layoutResourceId,
+	public ForecastAdapter(Context context, int layoutResourceId,
 			ForecastData[] data) {
 		super(context, layoutResourceId, data);
 		this.context = context;

@@ -68,14 +68,18 @@ public class ForecastXMLParser {
 				}
 				if (tagName.equals(TIME)) {
 					// create new Forecast()
+					forecast = new Forecast();
 
 					for (int i = 0; i < nbrAttributes; i++) {
 						if (parser.getAttributeName(i).equals("from")) {
 							// set from time in Forecast
+							forecast.setTimeFrom(parser.getAttributeValue(i));
 						} else if (parser.getAttributeName(i).equals("to")) {
 							// set to time in Forecast
+							forecast.setTimeTo(parser.getAttributeValue(i));
 						} else if (parser.getAttributeName(i).equals("period")) {
 							// set period in Forecast
+							forecast.setTimePeriod(parser.getAttributeValue(i));
 						}
 					}
 				}
@@ -83,8 +87,11 @@ public class ForecastXMLParser {
 					for (int i = 0; i < nbrAttributes; i++) {
 						if (parser.getAttributeName(i).equals("number")) {
 							// set symbol number in Forecast
+							forecast.setSymbolNumber(parser
+									.getAttributeValue(i));
 						} else if (parser.getAttributeName(i).equals("name")) {
 							// set symbol name in Forecast
+							forecast.setSymbolName(parser.getAttributeValue(i));
 						}
 					}
 				}
@@ -92,6 +99,8 @@ public class ForecastXMLParser {
 					for (int i = 0; i < nbrAttributes; i++) {
 						if (parser.getAttributeName(i).equals("value")) {
 							// set prec value in Forecast
+							forecast.setPrecipitationValue(parser
+									.getAttributeValue(i));
 						}
 					}
 				}
@@ -99,8 +108,12 @@ public class ForecastXMLParser {
 					for (int i = 0; i < nbrAttributes; i++) {
 						if (parser.getAttributeName(i).equals("code")) {
 							// set wind code in Forecast
+							forecast.setWindDirectionCode(parser
+									.getAttributeValue(i));
 						} else if (parser.getAttributeName(i).equals("name")) {
 							// set wind name in Forecast
+							forecast.setWindDirectionName(parser
+									.getAttributeValue(i));
 						}
 					}
 				}
@@ -108,8 +121,12 @@ public class ForecastXMLParser {
 					for (int i = 0; i < nbrAttributes; i++) {
 						if (parser.getAttributeName(i).equals("mps")) {
 							// set velocity in in Forecast
+							forecast.setWindSpeedMps(parser
+									.getAttributeValue(i));
 						} else if (parser.getAttributeName(i).equals("name")) {
 							// set wind name in Forecast
+							forecast.setWindSpeedName(parser
+									.getAttributeValue(i));
 						}
 					}
 				}
@@ -117,6 +134,8 @@ public class ForecastXMLParser {
 					for (int i = 0; i < nbrAttributes; i++) {
 						if (parser.getAttributeName(i).equals("value")) {
 							// settemp in in Forecast
+							forecast.setTemperatureValue(parser
+									.getAttributeValue(i));
 						}
 					}
 				}
@@ -129,7 +148,7 @@ public class ForecastXMLParser {
 					// set next update time in ForecastList
 				} else if (tagName.equals(TIME)) {
 					// add Forecast to ForecastList!!!
-
+					forecastList.add(forecast);
 				}
 				break;
 			}

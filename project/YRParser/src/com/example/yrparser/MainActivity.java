@@ -2,9 +2,7 @@ package com.example.yrparser;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.xmlpull.v1.XmlPullParserException;
@@ -21,8 +19,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
