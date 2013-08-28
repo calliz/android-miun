@@ -48,7 +48,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private ForecastAdapter forecastAdapter;
 
 	private static final int NUM_TABS = 3;
-	private static final String FORECAST = "http://www.yr.no/sted/Sverige/Sk%C3%A5ne/Malm%C3%B6/forecast.xml";
+	private static final String FORECAST_URL = "http://www.yr.no/sted/Sverige/Sk%C3%A5ne/Malm%C3%B6/forecast.xml";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +102,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 
 		forecastList = new ArrayList<Forecast>();
-		new ForecastLoaderTask().execute(FORECAST);
+		new ForecastLoaderTask().execute(FORECAST_URL);
 
 	}
 
@@ -214,10 +214,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 
 		@Override
-		protected SimpleAdapter doInBackground(String... forecastParams) {
+		protected SimpleAdapter doInBackground(String... forecastURLs) {
 			// Only one param for testing. Maybe more params later
-			
-			forecastList = new ForecastXMLParser().parse(forecastParams);
+			forecastList = new ForecastXMLParser().parse(forecastURLs[0]);
 
 			/** Keys used in Hashmap */
 			String[] from = { "country", "flag", "details" };

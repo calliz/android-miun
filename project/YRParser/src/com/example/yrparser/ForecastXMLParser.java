@@ -1,9 +1,11 @@
 package com.example.yrparser;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 public class ForecastXMLParser {
@@ -11,24 +13,132 @@ public class ForecastXMLParser {
 	private XmlPullParser parser;
 
 	private InputStream urlStream;
-
 	private List<Forecast> forecastList;
 	private Forecast forecast;
 
 	/**
-	 * XML tags
+	 * XML tag constants
 	 */
 	private static final String LOCATION = "location";
 	private static final String LAST_UPDATE = "lastupdate";
 	private static final String NEXT_UPDATE = "nextupdate";
 	private static final String SUN = "sun";
-	private static final String TEXT = "text";
 	private static final String TIME = "time";
-	private static final String NAME = "name";
-	
-	private public List<Forecast> parse(String[] forecast) {
+	private static final String SYMBOL = "symbol";
+	private static final String PRECIPITATION = "precipitation";
+	private static final String WIND_DIRECTION = "windDirection";
+	private static final String WIND_SPEED = "windSpeed";
+	private static final String TEMPERATURE = "temperature";
+	private static final String PRESSURE = "pressure";
+
+	public List<Forecast> parse(String forecastURL)
+			throws XmlPullParserException {
+
+		parserFactory = XmlPullParserFactory.newInstance();
+		parser = parserFactory.newPullParser();
+		urlStream = downloadUrl(forecastURL);
+		parser.setInput(urlStream, null);
+		int eventType = parser.getEventType();
+		forecast = null;
+		forecastList = new ArrayList<Forecast>();
+		String tagName;
+		int nbrAttributes;
+
+		while (eventType != XmlPullParser.END_DOCUMENT) {
+			tagName = parser.getName();
+
+			switch (eventType) {
+			case XmlPullParser.START_DOCUMENT:
+				break;
+			case XmlPullParser.START_TAG:
+				if (tagName.equals(LOCATION)) {
+					// set location in ForecastList
+				}
+				if (tagName.equals(SUN)) {
+					for (int i = 0; i < nbrAttributes; i++) {
+						if (parser.getAttributeName(i).equals("rise")) {
+							// set sunrise in ForecastList
+						} else if (parser.getAttributeName(i).equals("set")) {
+							// set sunset in ForecastList
+						}
+					}
+				}
+				if (tagName.equals(TIME)) {
+					// create new Forecast()
+
+					for (int i = 0; i < nbrAttributes; i++) {
+						if (parser.getAttributeName(i).equals("from")) {
+							// set from time in Forecast
+						} else if (parser.getAttributeName(i).equals("to")) {
+							// set to time in Forecast
+						} else if (parser.getAttributeName(i).equals("period")) {
+							// set period in Forecast
+						}
+					}
+				}
+				if (tagName.equals(SYMBOL)) {
+					for (int i = 0; i < nbrAttributes; i++) {
+						if (parser.getAttributeName(i).equals("number")) {
+							// set symbol number in Forecast
+						} else if (parser.getAttributeName(i).equals("name")) {
+							// set symbol name in Forecast
+						}
+					}
+				}
+				if (tagName.equals(PRECIPITATION)) {
+					for (int i = 0; i < nbrAttributes; i++) {
+						if (parser.getAttributeName(i).equals("value")) {
+							// set prec value in Forecast
+						}
+					}
+				}
+				if (tagName.equals(WIND_DIRECTION)) {
+					for (int i = 0; i < nbrAttributes; i++) {
+						if (parser.getAttributeName(i).equals("code")) {
+							// set wind code in Forecast
+						} else if (parser.getAttributeName(i).equals("name")) {
+							// set wind name in Forecast
+						}
+					}
+				}
+				if (tagName.equals(WIND_SPEED)) {
+					for (int i = 0; i < nbrAttributes; i++) {
+						if (parser.getAttributeName(i).equals("mps")) {
+							// set velocity in in Forecast
+						} else if (parser.getAttributeName(i).equals("name")) {
+							// set wind name in Forecast
+						}
+					}
+				}
+				if (tagName.equals(TEMPERATURE)) {
+					for (int i = 0; i < nbrAttributes; i++) {
+						if (parser.getAttributeName(i).equals("value")) {
+							// settemp in in Forecast
+						}
+					}
+				}
+				break;
+			case XmlPullParser.END_TAG:
+				if (tagName.equals(LAST_UPDATE)) {
+					// set last update time in ForecastList
+					// done = true;
+				} else if (tagName.equals(NEXT_UPDATE)) {
+					// set next update time in ForecastList
+				} else if (tagName.equals(TIME)) {
+					// add Forecast to ForecastList!!!
+
+				}
+				break;
+			}
+			eventType = parser.next();
+		}
+		return forecastList;
+	}
+
+	private InputStream downloadUrl(String forecastURL) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 }
+
