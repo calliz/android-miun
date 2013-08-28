@@ -1,6 +1,10 @@
 package com.example.yrparser;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,10 +33,9 @@ public class ForecastXMLParser {
 	private static final String WIND_DIRECTION = "windDirection";
 	private static final String WIND_SPEED = "windSpeed";
 	private static final String TEMPERATURE = "temperature";
-	private static final String PRESSURE = "pressure";
 
 	public List<Forecast> parse(String forecastURL)
-			throws XmlPullParserException {
+			throws XmlPullParserException, MalformedURLException, IOException {
 
 		parserFactory = XmlPullParserFactory.newInstance();
 		parser = parserFactory.newPullParser();
@@ -42,7 +45,7 @@ public class ForecastXMLParser {
 		forecast = null;
 		forecastList = new ArrayList<Forecast>();
 		String tagName;
-		int nbrAttributes;
+		int nbrAttributes = 0;
 
 		while (eventType != XmlPullParser.END_DOCUMENT) {
 			tagName = parser.getName();
@@ -135,10 +138,15 @@ public class ForecastXMLParser {
 		return forecastList;
 	}
 
-	private InputStream downloadUrl(String forecastURL) {
-		// TODO Auto-generated method stub
-		return null;
+	private InputStream downloadUrl(String forecastURL)
+			throws MalformedURLException, IOException {
+		URL url = new URL(forecastURL);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod("GET");
+		conn.setDoInput(true);
+		conn.connect();
+		InputStream stream = conn.getInputStream();
+		return stream;
 	}
 
 }
-
