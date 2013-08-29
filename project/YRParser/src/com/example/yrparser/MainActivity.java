@@ -15,7 +15,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -239,22 +238,21 @@ public class MainActivity extends SherlockFragmentActivity implements
 			for (int i = 0; i < result.size(); i++) {
 				StringBuilder sb = new StringBuilder();
 				Forecast fc = result.get(i);
-				sb.append(fc.getTimeFrom() + "-" + fc.getTimeTo() + "\n"
-						+ fc.getTemperatureValue() + "\n"
-						+ fc.getWindDirectionName() + "\n"
-						+ fc.getWindSpeedMps() + "\n" + fc.getWindSpeedName()
-						+ "\n" + fc.getPrecipitationValue() + "\n");
+				sb.append(fc.getDateFrom() + " - " + fc.getDateTo() + "\n"
+						+ fc.getTimeFrom() + " - " + fc.getTimeTo()
+						+ "\nTemp: " + fc.getTemperatureValue() + "\u00B0C\n"
+						+ fc.getWindSpeedName() + " " + fc.getWindSpeedMps()
+						+ " m/s\nfra " + fc.getWindDirectionName()
+						+ "\nNedbør: " + fc.getPrecipitationValue() + "mm\n");
 
 				int symbol = getSymbol(fc.getSymbolNumber(), fc.getTimePeriod());
 				forecast_data[i] = new ForecastData(symbol, sb.toString());
-				Log.d("MainActivity", "Added symbol " + symbol + " and info "
-						+ sb.toString() + " to forecast_data[]\n");
 			}
 
 			prog.dismiss();
 
 			forecastAdapter = new ForecastAdapter(MainActivity.this,
-					R.layout.weather_item_row, forecast_data);
+					R.layout.forecast_row, forecast_data);
 		}
 
 		private int getSymbol(String symbolNumber, String timePeriod) {
@@ -270,113 +268,64 @@ public class MainActivity extends SherlockFragmentActivity implements
 				}
 			case 2:
 				if (period > 0 && period < 3) {
-					return R.drawable.sym_01d;
+					return R.drawable.sym_02d;
 				} else {
-					return R.drawable.sym_01n;
+					return R.drawable.sym_02n;
 				}
 			case 3:
 				if (period > 0 && period < 3) {
-					return R.drawable.sym_01d;
+					return R.drawable.sym_03d;
 				} else {
-					return R.drawable.sym_01n;
+					return R.drawable.sym_03n;
 				}
 			case 4:
-				if (period > 0 && period < 3) {
-					return R.drawable.sym_01d;
-				} else {
-					return R.drawable.sym_01n;
-				}
+				return R.drawable.sym_04;
 			case 5:
 				if (period > 0 && period < 3) {
-					return R.drawable.sym_01d;
+					return R.drawable.sym_05d;
 				} else {
-					return R.drawable.sym_01n;
+					return R.drawable.sym_05n;
 				}
 			case 6:
 				if (period > 0 && period < 3) {
-					return R.drawable.sym_01d;
+					return R.drawable.sym_06d;
 				} else {
-					return R.drawable.sym_01n;
+					return R.drawable.sym_06n;
 				}
 			case 7:
 				if (period > 0 && period < 3) {
-					return R.drawable.sym_01d;
+					return R.drawable.sym_07d;
 				} else {
-					return R.drawable.sym_01n;
+					return R.drawable.sym_07n;
 				}
 			case 8:
 				if (period > 0 && period < 3) {
-					return R.drawable.sym_01d;
+					return R.drawable.sym_08d;
 				} else {
-					return R.drawable.sym_01n;
+					return R.drawable.sym_08n;
 				}
-
 			case 9:
-				if (period > 0 && period < 3) {
-					return R.drawable.sym_01d;
-				} else {
-					return R.drawable.sym_01n;
-				}
+				return R.drawable.sym_09;
 			case 10:
-				if (period > 0 && period < 3) {
-					return R.drawable.sym_01d;
-				} else {
-					return R.drawable.sym_01n;
-				}
+				return R.drawable.sym_10;
 			case 11:
-				if (period > 0 && period < 3) {
-					return R.drawable.sym_01d;
-				} else {
-					return R.drawable.sym_01n;
-				}
+				return R.drawable.sym_11;
 			case 12:
-				if (period > 0 && period < 3) {
-					return R.drawable.sym_01d;
-				} else {
-					return R.drawable.sym_01n;
-				}
+				return R.drawable.sym_12;
 			case 13:
-				if (period > 0 && period < 3) {
-					return R.drawable.sym_01d;
-				} else {
-					return R.drawable.sym_01n;
-				}
+				return R.drawable.sym_13;
 			case 14:
-				if (period > 0 && period < 3) {
-					return R.drawable.sym_01d;
-				} else {
-					return R.drawable.sym_01n;
-				}
+				return R.drawable.sym_14;
 			case 15:
-				if (period > 0 && period < 3) {
-					return R.drawable.sym_01d;
-				} else {
-					return R.drawable.sym_01n;
-				}
+				return R.drawable.sym_15;
 			case 16:
-				if (period > 0 && period < 3) {
-					return R.drawable.sym_01d;
-				} else {
-					return R.drawable.sym_01n;
-				}
+				return R.drawable.sym_16;
 			case 17:
-				if (period > 0 && period < 3) {
-					return R.drawable.sym_01d;
-				} else {
-					return R.drawable.sym_01n;
-				}
+				return R.drawable.sym_17;
 			case 18:
-				if (period > 0 && period < 3) {
-					return R.drawable.sym_01d;
-				} else {
-					return R.drawable.sym_01n;
-				}
+				return R.drawable.sym_18;
 			case 19:
-				if (period > 0 && period < 3) {
-					return R.drawable.sym_01d;
-				} else {
-					return R.drawable.sym_01n;
-				}
+				return R.drawable.sym_19;
 			default:
 				return R.drawable.sym_01d;
 			}

@@ -1,8 +1,18 @@
 package com.example.yrparser;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import android.util.Log;
+
 public class Forecast {
+	private String sunrise;
+	private String sunset;
 	private String timeFrom;
 	private String timeTo;
+	private String dateFrom;
+	private String dateTo;
 	private String timePeriod;
 	private String symbolNumber;
 	private String symbolName;
@@ -13,12 +23,28 @@ public class Forecast {
 	private String windSpeedName;
 	private String temperatureValue;
 
+	public String getSunrise() {
+		return sunrise;
+	}
+
+	public String getSunset() {
+		return sunset;
+	}
+
 	public String getTimeFrom() {
 		return timeFrom;
 	}
 
 	public String getTimeTo() {
 		return timeTo;
+	}
+
+	public String getDateFrom() {
+		return dateFrom;
+	}
+
+	public String getDateTo() {
+		return dateTo;
 	}
 
 	public String getTimePeriod() {
@@ -57,12 +83,28 @@ public class Forecast {
 		return temperatureValue;
 	}
 
+	public void setSunrise(String sunrise) {
+		this.sunrise = sunrise;
+	}
+
+	public void setSunset(String sunset) {
+		this.sunset = sunset;
+	}
+
 	public void setTimeFrom(String timeFrom) {
 		this.timeFrom = timeFrom;
 	}
 
 	public void setTimeTo(String timeTo) {
 		this.timeTo = timeTo;
+	}
+
+	public void setDateFrom(String dateFrom) {
+		this.dateFrom = dateFrom;
+	}
+
+	public void setDateTo(String dateTo) {
+		this.dateTo = dateTo;
 	}
 
 	public void setTimePeriod(String timePeriod) {

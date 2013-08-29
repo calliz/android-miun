@@ -5,14 +5,15 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
-
-import android.util.Log;
 
 public class ForecastXMLParser {
 	private XmlPullParserFactory parserFactory;
@@ -25,9 +26,6 @@ public class ForecastXMLParser {
 	/**
 	 * XML tag constants
 	 */
-	private static final String LOCATION = "location";
-	private static final String LAST_UPDATE = "lastupdate";
-	private static final String NEXT_UPDATE = "nextupdate";
 	private static final String SUN = "sun";
 	private static final String TIME = "time";
 	private static final String SYMBOL = "symbol";
@@ -47,6 +45,8 @@ public class ForecastXMLParser {
 		forecastList = new ArrayList<Forecast>();
 		String tagName;
 		int nbrAttributes = 0;
+		String sunrise = null;
+		String sunset = null;
 
 		while (eventType != XmlPullParser.END_DOCUMENT) {
 			tagName = parser.getName();
@@ -56,15 +56,14 @@ public class ForecastXMLParser {
 			case XmlPullParser.START_DOCUMENT:
 				break;
 			case XmlPullParser.START_TAG:
-				if (tagName.equals(LOCATION)) {
-					// set location in ForecastList
-				}
 				if (tagName.equals(SUN)) {
 					for (int i = 0; i < nbrAttributes; i++) {
 						if (parser.getAttributeName(i).equals("rise")) {
-							// set sunrise in ForecastList
+							// save sunrise
+							sunrise = parser.getAttributeValue(i);
 						} else if (parser.getAttributeName(i).equals("set")) {
-							// set sunset in ForecastList
+							// save sunset
+							sunset = parser.getAttributeValue(i);
 						}
 					}
 				}
@@ -72,27 +71,21 @@ public class ForecastXMLParser {
 					// create new Forecast()
 					forecast = new Forecast();
 
-					Log.d("ForecastXMLParser:TIME TAG", "Forecast created\n");
-
 					for (int i = 0; i < nbrAttributes; i++) {
-						Log.d("ForecastXMLParser:parser.getAttributeName()", parser.getAttributeName(i));
 						if (parser.getAttributeName(i).equals("from")) {
 							// set from time in Forecast
-							Log.d("ForecastXMLParser:TIME TAG",
-									"from attribute: "
-											+ parser.getAttributeValue(i));
-							forecast.setTimeFrom(parser.getAttributeValue(i));
+							forecast.setTimeFrom(convertToTime(parser
+									.getAttributeValue(i)));
+							forecast.setDateFrom(convertToDate(parser
+									.getAttributeValue(i)));
 						} else if (parser.getAttributeName(i).equals("to")) {
 							// set to time in Forecast
-							Log.d("ForecastXMLParser:TIME TAG",
-									"to attribute: "
-											+ parser.getAttributeValue(i));
-							forecast.setTimeTo(parser.getAttributeValue(i));
+							forecast.setTimeTo(convertToTime(parser
+									.getAttributeValue(i)));
+							forecast.setDateTo(convertToDate(parser
+									.getAttributeValue(i)));
 						} else if (parser.getAttributeName(i).equals("period")) {
 							// set period in Forecast
-							Log.d("ForecastXMLParser:TIME TAG",
-									"period attribute: "
-											+ parser.getAttributeValue(i));
 							forecast.setTimePeriod(parser.getAttributeValue(i));
 						}
 					}
@@ -147,7 +140,7 @@ public class ForecastXMLParser {
 				if (tagName.equals(TEMPERATURE)) {
 					for (int i = 0; i < nbrAttributes; i++) {
 						if (parser.getAttributeName(i).equals("value")) {
-							// settemp in in Forecast
+							// set temp in Forecast
 							forecast.setTemperatureValue(parser
 									.getAttributeValue(i));
 						}
@@ -155,12 +148,11 @@ public class ForecastXMLParser {
 				}
 				break;
 			case XmlPullParser.END_TAG:
-				if (tagName.equals(LAST_UPDATE)) {
-					// set last update time in ForecastList
-					// done = true;
-				} else if (tagName.equals(NEXT_UPDATE)) {
-					// set next update time in ForecastList
-				} else if (tagName.equals(TIME)) {
+				if (tagName.equals(TIME)) {
+					// add sunset and sunrise to Forecast
+					forecast.setSunrise(sunrise);
+					forecast.setSunset(sunset);
+
 					// add Forecast to ForecastList!!!
 					forecastList.add(forecast);
 				}
@@ -168,7 +160,6 @@ public class ForecastXMLParser {
 			}
 			eventType = parser.next();
 		}
-		Log.d("ForecastXMLParser", forecastList.size() + " forecasts created\n");
 		return forecastList;
 	}
 
@@ -181,6 +172,32 @@ public class ForecastXMLParser {
 		conn.connect();
 		InputStream stream = conn.getInputStream();
 		return stream;
+	}
+
+	private String convertToDate(String dateTime) {
+		Date input = null;
+		try {
+			input = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+					.parse(dateTime);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		String output = new SimpleDateFormat("yyyy-MM-dd").format(input);
+		return output;
+	}
+
+	private String convertToTime(String dateTime) {
+		Date input = null;
+		try {
+			input = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+					.parse(dateTime);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		String output = new SimpleDateFormat("HH:mm").format(input);
+		return output; 
 	}
 
 }
