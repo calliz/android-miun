@@ -117,10 +117,6 @@ public class ForecastXMLParser {
 							// set wind code in Forecast
 							forecast.setWindDirectionCode(parser
 									.getAttributeValue(i));
-						} else if (parser.getAttributeName(i).equals("name")) {
-							// set wind name in Forecast
-							forecast.setWindDirectionName(parser
-									.getAttributeValue(i));
 						}
 					}
 				}
@@ -132,8 +128,9 @@ public class ForecastXMLParser {
 									.getAttributeValue(i));
 						} else if (parser.getAttributeName(i).equals("name")) {
 							// set wind name in Forecast
-							forecast.setWindSpeedName(parser
-									.getAttributeValue(i));
+							forecast.setWindSpeedName(Translate
+									.translateWindSpeedName(parser
+											.getAttributeValue(i)));
 						}
 					}
 				}
@@ -197,7 +194,7 @@ public class ForecastXMLParser {
 		}
 
 		String output = new SimpleDateFormat("HH:mm").format(input);
-		return output; 
+		return output;
 	}
 
 }

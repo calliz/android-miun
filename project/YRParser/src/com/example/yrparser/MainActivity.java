@@ -145,17 +145,30 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			return "Section " + (position + 1);
+			String s = "";
+			switch (position) {
+			case 0:
+				s = "Overview";
+				break;
+			case 1:
+				s = "Hour by hour";
+				break;
+			case 2:
+				s = "Long term";
+				break;
+			default:
+				break;
+			}
+			return s;
 		}
-
 	}
 
 	public static class ArrayListFragment extends SherlockListFragment {
 		private int position;
 
 		/**
-		 * Create a new instance of CountingFragment, providing "position" as an
-		 * argument.
+		 * Create a new instance of ArrayListFragment, providing "position" as
+		 * an argument.
 		 */
 		static ArrayListFragment newInstance(int pos) {
 			ArrayListFragment fragment = new ArrayListFragment();
@@ -187,7 +200,21 @@ public class MainActivity extends SherlockFragmentActivity implements
 			View v = inflater.inflate(R.layout.fragment_pager_list, container,
 					false);
 			View tv = v.findViewById(R.id.text);
-			((TextView) tv).setText("Fragment #" + (position + 1));
+
+			switch (position) {
+			case 0:
+				((TextView) tv).setText("Forecast overview");
+				break;
+			case 1:
+				((TextView) tv).setText("Forecast hour by hour");
+				break;
+			case 2:
+				((TextView) tv).setText("Forecast long term");
+			default:
+				break;
+
+			}
+
 			return v;
 		}
 
@@ -213,7 +240,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		protected List<Forecast> doInBackground(String... forecastURLs) {
-			// Only one param for testing. Maybe more params later
+			// TODO Only one param for testing. Maybe more params later
+			// Should maybe be different parsing for different tabs!!!
 			try {
 				forecastList = new ForecastXMLParser().parse(forecastURLs[0]);
 			} catch (MalformedURLException e) {
@@ -228,7 +256,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 			}
 
 			return forecastList;
-
 		}
 
 		@Override
@@ -242,8 +269,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 						+ fc.getTimeFrom() + " - " + fc.getTimeTo()
 						+ "\nTemp: " + fc.getTemperatureValue() + "\u00B0C\n"
 						+ fc.getWindSpeedName() + " " + fc.getWindSpeedMps()
-						+ " m/s\nfra " + fc.getWindDirectionName()
-						+ "\nNedbør: " + fc.getPrecipitationValue() + "mm\n");
+						+ " m/s\nfrom " + fc.getWindDirectionCode()
+						+ "\nPrecipitation: " + fc.getPrecipitationValue() + "mm\n");
 
 				int symbol = getSymbol(fc.getSymbolNumber(), fc.getTimePeriod());
 				forecast_data[i] = new ForecastData(symbol, sb.toString());
