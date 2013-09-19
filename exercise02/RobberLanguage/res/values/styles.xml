@@ -11,6 +11,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Small	</item>
 
         <!-- set default widget styles -->
         <item name="android:alertDialogStyle">@style/AlertDialog</item>
