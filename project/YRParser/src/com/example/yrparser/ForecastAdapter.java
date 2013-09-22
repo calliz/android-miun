@@ -2,8 +2,6 @@ package com.example.yrparser;
 
 import java.util.List;
 
-import android.app.Activity;
-import android.app.LauncherActivity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,20 +25,31 @@ public class ForecastAdapter extends ArrayAdapter<Forecast> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view;
+		ForecastHolder holder = null;
 
 		if (convertView == null) {
 			view = layoutInflater.inflate(layoutResourceId, parent, false);
 
+			holder = new ForecastHolder();
+			holder.imgSymbol = (ImageView) view.findViewById(R.id.symbol);
+			holder.txtInfo = (TextView) view.findViewById(R.id.info);
+
+			view.setTag(holder);
 		} else {
 			view = convertView;
+			holder = (ForecastHolder) view.getTag();
 		}
 
 		Forecast forecast = getItem(position);
-		((ImageView) view.findViewById(R.id.symbol)).setImageResource(forecast
-				.getIcon());
-		((TextView) view.findViewById(R.id.info)).setText(forecast.getLabel());
+		holder.imgSymbol.setImageResource(forecast.getIcon());
+		holder.txtInfo.setText(forecast.getLabel());
 
 		return view;
+	}
+
+	static class ForecastHolder {
+		ImageView imgSymbol;
+		TextView txtInfo;
 	}
 
 	public void setData(List<Forecast> forecastList) {

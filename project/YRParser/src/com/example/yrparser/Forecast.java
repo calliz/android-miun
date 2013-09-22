@@ -220,7 +220,13 @@ public class Forecast {
 		return label;
 	}
 
-	public void setLabel(String label) {
-		this.label = label;
+	public void generateWeatherInfo() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getDateFrom() + " - " + getDateTo() + "\n" + getTimeFrom()
+				+ " - " + getTimeTo() + "\nTemp: " + getTemperatureValue()
+				+ "\u00B0C\n" + getWindSpeedName() + " " + getWindSpeedMps()
+				+ " m/s\nfrom " + getWindDirectionCode() + "\nPrecipitation: "
+				+ getPrecipitationValue() + "mm\n");
+		label = sb.toString();
 	}
 }

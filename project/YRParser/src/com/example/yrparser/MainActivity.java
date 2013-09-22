@@ -166,7 +166,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public static class OverviewFragment extends SherlockListFragment implements
 			LoaderManager.LoaderCallbacks<List<Forecast>> {
 
-		private ForecastData[] forecast_data;
 		private ForecastAdapter overviewAdapter;
 
 		// private int position;
@@ -222,33 +221,36 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			// Prepare the loader. Either re-connect with an existing one,
 			// or start a new one.
-			getLoaderManager().initLoader(0, null, this);
+			Bundle urlBundle = new Bundle();
+			urlBundle.putString(FORECAST_URL, FORECAST_URL);
+			getLoaderManager().initLoader(0, urlBundle, this);
 
-//			new ForecastLoaderTask(this).execute(FORECAST_URL);
+			// new ForecastLoaderTask(this).execute(FORECAST_URL);
 		}
 
 		@Override
-		public Loader<List<Forecast>> onCreateLoader(int arg0, Bundle arg1) {
-			return new ForecastListLoader(getActivity());
+		public Loader<List<Forecast>> onCreateLoader(int id, Bundle urlBundle) {
+			return new ForecastListLoader(getActivity(),
+					urlBundle.getString(FORECAST_URL));
 		}
 
 		@Override
 		public void onLoadFinished(Loader<List<Forecast>> loader,
 				List<Forecast> data) {
 			overviewAdapter.setData(data);
-			 // The list should now be shown.
-            if (isResumed()) {
-                setListShown(true);
-            } else {
-                setListShownNoAnimation(true);
-            }
+			// The list should now be shown.
+			if (isResumed()) {
+				setListShown(true);
+			} else {
+				setListShownNoAnimation(true);
+			}
 
 		}
 
 		@Override
 		public void onLoaderReset(Loader<List<Forecast>> arg0) {
 			overviewAdapter.setData(null);
-			
+
 		}
 
 		// @Override
