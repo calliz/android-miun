@@ -1,6 +1,9 @@
 package com.example.yrparser;
 
+import java.util.List;
+
 import android.app.Activity;
+import android.app.LauncherActivity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,48 +12,44 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ForecastAdapter extends ArrayAdapter<ForecastData> {
+public class ForecastAdapter extends ArrayAdapter<Forecast> {
 
-	private Context context;
 	private int layoutResourceId;
-	private ForecastData data[] = null;
+	private final LayoutInflater layoutInflater;
 
-	public ForecastAdapter(Context context, int layoutResourceId,
-			ForecastData[] data) {
-		super(context, layoutResourceId, data);
-		this.context = context;
+	public ForecastAdapter(Context context, int layoutResourceId) {
+		super(context, layoutResourceId);
 		this.layoutResourceId = layoutResourceId;
-		this.data = data;
+		layoutInflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View row = convertView;
-		WeatherHolder holder = null;
+		View view;
 
-		if (row == null) {
-			LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-			row = inflater.inflate(layoutResourceId, parent, false);
+		if (convertView == null) {
+			view = layoutInflater.inflate(layoutResourceId, parent, false);
 
-			holder = new WeatherHolder();
-			holder.symbol = (ImageView) row.findViewById(R.id.symbol);
-			holder.info = (TextView) row.findViewById(R.id.info);
-
-			row.setTag(holder);
 		} else {
-			holder = (WeatherHolder) row.getTag();
+			view = convertView;
 		}
 
-		ForecastData forecastData = data[position];
-		holder.symbol.setImageResource(forecastData.symbol);
-		holder.info.setText(forecastData.info);
+		Forecast forecast = getItem(position);
+		((ImageView) view.findViewById(R.id.symbol)).setImageResource(forecast
+				.getIcon());
+		((TextView) view.findViewById(R.id.info)).setText(forecast.getLabel());
 
-		return row;
+		return view;
 	}
 
-	static class WeatherHolder {
-		ImageView symbol;
-		TextView info;
+	public void setData(List<Forecast> forecastList) {
+		clear();
+		if (forecastList != null) {
+			for (Forecast forecast : forecastList) {
+				add(forecast);
+			}
+		}
 	}
 
 }

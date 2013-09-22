@@ -2,24 +2,19 @@ package com.example.yrparser;
 
 import java.util.List;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.SherlockListFragment;
-import com.example.yrparser.ForecastLoaderTask.OnFetchingForecastsListener;
 
 public class MainActivity extends SherlockFragmentActivity implements
 		ActionBar.TabListener {
@@ -169,10 +164,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public static class OverviewFragment extends SherlockListFragment implements
-			OnFetchingForecastsListener {
+			LoaderManager.LoaderCallbacks<List<Forecast>> {
 
-		ProgressDialog prog;
 		private ForecastData[] forecast_data;
+		private ForecastAdapter overviewAdapter;
 
 		// private int position;
 
@@ -190,53 +185,84 @@ public class MainActivity extends SherlockFragmentActivity implements
 			return fragment;
 		}
 
-		@Override
-		public void onAttach(Activity activity) {
-			super.onAttach(activity);
-
-			prog = new ProgressDialog(activity);
-			prog.setMessage("Loading....");
-			prog.show();
-		}
-
-		/**
-		 * The Fragment's UI is just a simple text view showing its instance
-		 * number.
-		 */
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-
-			// data = (ForecastData[]) getArguments().getSerializable(
-			// FORECASTDATA_KEY);
-
-			View v = inflater.inflate(R.layout.fragment_overview_list,
-					container, false);
-			View tv = v.findViewById(R.id.text);
-			((TextView) tv).setText("Forecast Overview");
-
-			return v;
-		}
+		// /**
+		// * The Fragment's UI is just a simple text view showing its instance
+		// * number.
+		// */
+		// @Override
+		// public View onCreateView(LayoutInflater inflater, ViewGroup
+		// container,
+		// Bundle savedInstanceState) {
+		//
+		// // data = (ForecastData[]) getArguments().getSerializable(
+		// // FORECASTDATA_KEY);
+		//
+		// View v = inflater.inflate(R.layout.fragment_overview_list,
+		// container, false);
+		// View tv = v.findViewById(R.id.text);
+		// ((TextView) tv).setText("Forecast Overview");
+		//
+		// return v;
+		// }
 
 		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
 			super.onActivityCreated(savedInstanceState);
 
-			new ForecastLoaderTask(this).execute(FORECAST_URL);
+			// Initially there is no data
+			setEmptyText("Testar tom lista");
+
+			// Create an empty adapter we will use to display the loaded data.
+			overviewAdapter = new ForecastAdapter(getActivity(),
+					R.layout.forecast_row);
+			setListAdapter(overviewAdapter);
+
+			// Start out with a progress indicator.
+			setListShown(false);
+
+			// Prepare the loader. Either re-connect with an existing one,
+			// or start a new one.
+			getLoaderManager().initLoader(0, null, this);
+
+//			new ForecastLoaderTask(this).execute(FORECAST_URL);
 		}
 
 		@Override
-		public void onFetchSuccess(ForecastData[] data) {
-			forecast_data = data;
-			setListAdapter(new ForecastAdapter(getActivity(),
-					R.layout.forecast_row, data));
-			prog.dismiss();
+		public Loader<List<Forecast>> onCreateLoader(int arg0, Bundle arg1) {
+			return new ForecastListLoader(getActivity());
 		}
 
 		@Override
-		public void onFetchFailure() {
-			prog.dismiss();
+		public void onLoadFinished(Loader<List<Forecast>> loader,
+				List<Forecast> data) {
+			overviewAdapter.setData(data);
+			 // The list should now be shown.
+            if (isResumed()) {
+                setListShown(true);
+            } else {
+                setListShownNoAnimation(true);
+            }
+
 		}
+
+		@Override
+		public void onLoaderReset(Loader<List<Forecast>> arg0) {
+			overviewAdapter.setData(null);
+			
+		}
+
+		// @Override
+		// public void onFetchSuccess(ForecastData[] data) {
+		// forecast_data = data;
+		// setListAdapter(new ForecastAdapter(getActivity(),
+		// R.layout.forecast_row, data));
+		// prog.dismiss();
+		// }
+		//
+		// @Override
+		// public void onFetchFailure() {
+		// prog.dismiss();
+		// }
 
 	}
 
