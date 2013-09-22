@@ -1,13 +1,9 @@
 package com.example.yrparser;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.List;
 
-import org.xmlpull.v1.XmlPullParserException;
-
+import android.app.Activity;
 import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,9 +17,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.example.yrparser.ForecastLoaderTask.OnFetchingForecastsListener;
 
 public class MainActivity extends SherlockFragmentActivity implements
 		ActionBar.TabListener {
@@ -104,7 +100,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 
 		// forecastList = new ArrayList<Forecast>();
-		new ForecastLoaderTask().execute(FORECAST_URL);
 
 	}
 
@@ -139,10 +134,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 		@Override
 		public Fragment getItem(int position) {
 			switch (position) {
-			case 1:
-				return HourByHourFragment.newInstance(position);
-			case 2:
-				return LongTermFragment.newInstance(position);
+			// case 1:
+			// return HourByHourFragment.newInstance(position);
+			// case 2:
+			// return LongTermFragment.newInstance(position);
 			default:
 				return OverviewFragment.newInstance(position);
 			}
@@ -173,72 +168,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 	}
 
-	public static class ArrayListFragment extends SherlockListFragment {
-		private int position;
+	public static class OverviewFragment extends SherlockListFragment implements
+			OnFetchingForecastsListener {
 
-		/**
-		 * Create a new instance of ArrayListFragment, providing "position" as
-		 * an argument.
-		 */
-		static ArrayListFragment newInstance(int pos) {
-			ArrayListFragment fragment = new ArrayListFragment();
+		ProgressDialog prog;
+		private ForecastData[] forecast_data;
 
-			Bundle args = new Bundle();
-			args.putInt("pos", pos);
-			fragment.setArguments(args);
-
-			return fragment;
-		}
-
-		/**
-		 * When creating, retrieve this instance's number from its arguments.
-		 */
-		@Override
-		public void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			position = getArguments() != null ? getArguments().getInt("pos")
-					: 1;
-		}
-
-		/**
-		 * The Fragment's UI is just a simple text view showing its instance
-		 * number.
-		 */
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View v = inflater.inflate(R.layout.fragment_pager_list, container,
-					false);
-			View tv = v.findViewById(R.id.text);
-
-			switch (position) {
-			case 0:
-				((TextView) tv).setText("Forecast overview");
-				break;
-			case 1:
-				((TextView) tv).setText("Forecast hour by hour");
-				break;
-			case 2:
-				((TextView) tv).setText("Forecast long term");
-			default:
-				break;
-
-			}
-
-			return v;
-		}
-
-		@Override
-		public void onActivityCreated(Bundle savedInstanceState) {
-			super.onActivityCreated(savedInstanceState);
-			setListAdapter(forecastAdapter);
-		}
-
-	}
-
-	public static class OverviewFragment extends SherlockListFragment {
-
-		private int position;
+		// private int position;
 
 		/**
 		 * Create a new instance of OverviewFragment, providing "pos" as an
@@ -254,14 +190,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 			return fragment;
 		}
 
-		/**
-		 * When creating, retrieve this instance's number from its arguments.
-		 */
 		@Override
-		public void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			position = getArguments() != null ? getArguments().getInt("pos")
-					: 1;
+		public void onAttach(Activity activity) {
+			super.onAttach(activity);
+
+			prog = new ProgressDialog(activity);
+			prog.setMessage("Loading....");
+			prog.show();
 		}
 
 		/**
@@ -271,6 +206,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
+
+			// data = (ForecastData[]) getArguments().getSerializable(
+			// FORECASTDATA_KEY);
+
 			View v = inflater.inflate(R.layout.fragment_overview_list,
 					container, false);
 			View tv = v.findViewById(R.id.text);
@@ -282,246 +221,23 @@ public class MainActivity extends SherlockFragmentActivity implements
 		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
 			super.onActivityCreated(savedInstanceState);
-			setListAdapter(forecastAdapter);
-		}
 
-	}
-
-	public static class HourByHourFragment extends SherlockListFragment {
-
-		private int position;
-
-		/**
-		 * Create a new instance of HourByHourFragment, providing "pos" as an
-		 * argument.
-		 */
-		static HourByHourFragment newInstance(int pos) {
-			HourByHourFragment fragment = new HourByHourFragment();
-
-			Bundle args = new Bundle();
-			args.putInt("pos", pos);
-			fragment.setArguments(args);
-
-			return fragment;
-		}
-
-		/**
-		 * When creating, retrieve this instance's number from its arguments.
-		 */
-		@Override
-		public void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			position = getArguments() != null ? getArguments().getInt("pos")
-					: 1;
-		}
-
-		/**
-		 * The Fragment's UI is just a simple text view showing its instance
-		 * number.
-		 */
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View v = inflater.inflate(R.layout.fragment_hourbyhour_list,
-					container, false);
-			View tv = v.findViewById(R.id.text);
-			((TextView) tv).setText("Forecast hour by hour");
-
-			return v;
+			new ForecastLoaderTask(this).execute(FORECAST_URL);
 		}
 
 		@Override
-		public void onActivityCreated(Bundle savedInstanceState) {
-			super.onActivityCreated(savedInstanceState);
-			setListAdapter(forecastAdapter);
-		}
-
-	}
-
-	public static class LongTermFragment extends SherlockListFragment {
-
-		private int position;
-
-		/**
-		 * Create a new instance of LongtermFragment, providing "pos" as an
-		 * argument.
-		 */
-		static LongTermFragment newInstance(int pos) {
-			LongTermFragment fragment = new LongTermFragment();
-
-			Bundle args = new Bundle();
-			args.putInt("pos", pos);
-			fragment.setArguments(args);
-
-			return fragment;
-		}
-
-		/**
-		 * When creating, retrieve this instance's number from its arguments.
-		 */
-		@Override
-		public void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			position = getArguments() != null ? getArguments().getInt("pos")
-					: 1;
-		}
-
-		/**
-		 * The Fragment's UI is just a simple text view showing its instance
-		 * number.
-		 */
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View v = inflater.inflate(R.layout.fragment_longterm_list,
-					container, false);
-			View tv = v.findViewById(R.id.text);
-
-			((TextView) tv).setText("Forecast long term");
-
-			return v;
-		}
-
-		@Override
-		public void onActivityCreated(Bundle savedInstanceState) {
-			super.onActivityCreated(savedInstanceState);
-			setListAdapter(forecastAdapter);
-		}
-
-	}
-
-	public class ForecastLoaderTask extends
-			AsyncTask<String, Void, List<Forecast>> {
-
-		ProgressDialog prog;
-
-		@Override
-		protected void onPreExecute() {
-			prog = new ProgressDialog(MainActivity.this);
-			prog.setMessage("Loading....");
-			prog.show();
-		}
-
-		@Override
-		protected List<Forecast> doInBackground(String... forecastURLs) {
-			// TODO Only one param for testing. Maybe more params later
-			// Should maybe be different parsing for different tabs!!!
-			try {
-				forecastList = new ForecastXMLParser().parse(forecastURLs[0]);
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (XmlPullParserException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			return forecastList;
-		}
-
-		@Override
-		protected void onPostExecute(List<Forecast> result) {
-			forecast_data = new ForecastData[result.size()];
-
-			for (int i = 0; i < result.size(); i++) {
-				StringBuilder sb = new StringBuilder();
-				Forecast fc = result.get(i);
-				sb.append(fc.getDateFrom() + " - " + fc.getDateTo() + "\n"
-						+ fc.getTimeFrom() + " - " + fc.getTimeTo()
-						+ "\nTemp: " + fc.getTemperatureValue() + "\u00B0C\n"
-						+ fc.getWindSpeedName() + " " + fc.getWindSpeedMps()
-						+ " m/s\nfrom " + fc.getWindDirectionCode()
-						+ "\nPrecipitation: " + fc.getPrecipitationValue()
-						+ "mm\n");
-
-				int symbol = getSymbol(fc.getSymbolNumber(), fc.getTimePeriod());
-				forecast_data[i] = new ForecastData(symbol, sb.toString());
-			}
-
+		public void onFetchSuccess(ForecastData[] data) {
+			forecast_data = data;
+			setListAdapter(new ForecastAdapter(getActivity(),
+					R.layout.forecast_row, data));
 			prog.dismiss();
-
-			forecastAdapter = new ForecastAdapter(MainActivity.this,
-					R.layout.forecast_row, forecast_data);
 		}
 
-		private int getSymbol(String symbolNumber, String timePeriod) {
-			int symbol = Integer.parseInt(symbolNumber);
-			int period = Integer.parseInt(timePeriod);
-
-			switch (symbol) {
-			case 1:
-				if (period > 0 && period < 3) {
-					return R.drawable.sym_01d;
-				} else {
-					return R.drawable.sym_01n;
-				}
-			case 2:
-				if (period > 0 && period < 3) {
-					return R.drawable.sym_02d;
-				} else {
-					return R.drawable.sym_02n;
-				}
-			case 3:
-				if (period > 0 && period < 3) {
-					return R.drawable.sym_03d;
-				} else {
-					return R.drawable.sym_03n;
-				}
-			case 4:
-				return R.drawable.sym_04;
-			case 5:
-				if (period > 0 && period < 3) {
-					return R.drawable.sym_05d;
-				} else {
-					return R.drawable.sym_05n;
-				}
-			case 6:
-				if (period > 0 && period < 3) {
-					return R.drawable.sym_06d;
-				} else {
-					return R.drawable.sym_06n;
-				}
-			case 7:
-				if (period > 0 && period < 3) {
-					return R.drawable.sym_07d;
-				} else {
-					return R.drawable.sym_07n;
-				}
-			case 8:
-				if (period > 0 && period < 3) {
-					return R.drawable.sym_08d;
-				} else {
-					return R.drawable.sym_08n;
-				}
-			case 9:
-				return R.drawable.sym_09;
-			case 10:
-				return R.drawable.sym_10;
-			case 11:
-				return R.drawable.sym_11;
-			case 12:
-				return R.drawable.sym_12;
-			case 13:
-				return R.drawable.sym_13;
-			case 14:
-				return R.drawable.sym_14;
-			case 15:
-				return R.drawable.sym_15;
-			case 16:
-				return R.drawable.sym_16;
-			case 17:
-				return R.drawable.sym_17;
-			case 18:
-				return R.drawable.sym_18;
-			case 19:
-				return R.drawable.sym_19;
-			default:
-				return R.drawable.sym_01d;
-			}
+		@Override
+		public void onFetchFailure() {
+			prog.dismiss();
 		}
+
 	}
 
 }
