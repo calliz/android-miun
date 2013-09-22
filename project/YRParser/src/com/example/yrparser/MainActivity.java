@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.SherlockListFragment;
 
@@ -48,6 +49,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	private static final int NUM_TABS = 3;
 	private static final String FORECAST_URL = "http://www.yr.no/sted/Sverige/Sk%C3%A5ne/Malm%C3%B6/forecast.xml";
+	private int CURRENT_TAB = 0;
+	private int CURRENT_FORECAST_URL;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +138,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public Fragment getItem(int position) {
-			return ArrayListFragment.newInstance(position);
+			switch (position) {
+			case 1:
+				return HourByHourFragment.newInstance(position);
+			case 2:
+				return LongTermFragment.newInstance(position);
+			default:
+				return OverviewFragment.newInstance(position);
+			}
 		}
 
 		@Override
@@ -226,6 +236,160 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	}
 
+	public static class OverviewFragment extends SherlockListFragment {
+
+		private int position;
+
+		/**
+		 * Create a new instance of OverviewFragment, providing "pos" as an
+		 * argument.
+		 */
+		static OverviewFragment newInstance(int pos) {
+			OverviewFragment fragment = new OverviewFragment();
+
+			Bundle args = new Bundle();
+			args.putInt("pos", pos);
+			fragment.setArguments(args);
+
+			return fragment;
+		}
+
+		/**
+		 * When creating, retrieve this instance's number from its arguments.
+		 */
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			position = getArguments() != null ? getArguments().getInt("pos")
+					: 1;
+		}
+
+		/**
+		 * The Fragment's UI is just a simple text view showing its instance
+		 * number.
+		 */
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			View v = inflater.inflate(R.layout.fragment_overview_list,
+					container, false);
+			View tv = v.findViewById(R.id.text);
+			((TextView) tv).setText("Forecast Overview");
+
+			return v;
+		}
+
+		@Override
+		public void onActivityCreated(Bundle savedInstanceState) {
+			super.onActivityCreated(savedInstanceState);
+			setListAdapter(forecastAdapter);
+		}
+
+	}
+
+	public static class HourByHourFragment extends SherlockListFragment {
+
+		private int position;
+
+		/**
+		 * Create a new instance of HourByHourFragment, providing "pos" as an
+		 * argument.
+		 */
+		static HourByHourFragment newInstance(int pos) {
+			HourByHourFragment fragment = new HourByHourFragment();
+
+			Bundle args = new Bundle();
+			args.putInt("pos", pos);
+			fragment.setArguments(args);
+
+			return fragment;
+		}
+
+		/**
+		 * When creating, retrieve this instance's number from its arguments.
+		 */
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			position = getArguments() != null ? getArguments().getInt("pos")
+					: 1;
+		}
+
+		/**
+		 * The Fragment's UI is just a simple text view showing its instance
+		 * number.
+		 */
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			View v = inflater.inflate(R.layout.fragment_hourbyhour_list,
+					container, false);
+			View tv = v.findViewById(R.id.text);
+			((TextView) tv).setText("Forecast hour by hour");
+
+			return v;
+		}
+
+		@Override
+		public void onActivityCreated(Bundle savedInstanceState) {
+			super.onActivityCreated(savedInstanceState);
+			setListAdapter(forecastAdapter);
+		}
+
+	}
+
+	public static class LongTermFragment extends SherlockListFragment {
+
+		private int position;
+
+		/**
+		 * Create a new instance of LongtermFragment, providing "pos" as an
+		 * argument.
+		 */
+		static LongTermFragment newInstance(int pos) {
+			LongTermFragment fragment = new LongTermFragment();
+
+			Bundle args = new Bundle();
+			args.putInt("pos", pos);
+			fragment.setArguments(args);
+
+			return fragment;
+		}
+
+		/**
+		 * When creating, retrieve this instance's number from its arguments.
+		 */
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			position = getArguments() != null ? getArguments().getInt("pos")
+					: 1;
+		}
+
+		/**
+		 * The Fragment's UI is just a simple text view showing its instance
+		 * number.
+		 */
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			View v = inflater.inflate(R.layout.fragment_longterm_list,
+					container, false);
+			View tv = v.findViewById(R.id.text);
+
+			((TextView) tv).setText("Forecast long term");
+
+			return v;
+		}
+
+		@Override
+		public void onActivityCreated(Bundle savedInstanceState) {
+			super.onActivityCreated(savedInstanceState);
+			setListAdapter(forecastAdapter);
+		}
+
+	}
+
 	public class ForecastLoaderTask extends
 			AsyncTask<String, Void, List<Forecast>> {
 
@@ -270,7 +434,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 						+ "\nTemp: " + fc.getTemperatureValue() + "\u00B0C\n"
 						+ fc.getWindSpeedName() + " " + fc.getWindSpeedMps()
 						+ " m/s\nfrom " + fc.getWindDirectionCode()
-						+ "\nPrecipitation: " + fc.getPrecipitationValue() + "mm\n");
+						+ "\nPrecipitation: " + fc.getPrecipitationValue()
+						+ "mm\n");
 
 				int symbol = getSymbol(fc.getSymbolNumber(), fc.getTimePeriod());
 				forecast_data[i] = new ForecastData(symbol, sb.toString());

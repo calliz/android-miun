@@ -128,7 +128,7 @@ public class ForecastXMLParser {
 									.getAttributeValue(i));
 						} else if (parser.getAttributeName(i).equals("name")) {
 							// set wind name in Forecast
-							forecast.setWindSpeedName(Translate
+							forecast.setWindSpeedName(Translater
 									.translateWindSpeedName(parser
 											.getAttributeValue(i)));
 						}

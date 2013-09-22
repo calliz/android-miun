@@ -1,6 +1,6 @@
 package com.example.yrparser;
 
-public class Translate {
+public class Translater {
 
 	public static String translateWindSpeedName(String attributeValue) {
 		String s = null;
