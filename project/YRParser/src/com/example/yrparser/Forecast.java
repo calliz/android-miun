@@ -1,6 +1,5 @@
 package com.example.yrparser;
 
-import android.graphics.drawable.Drawable;
 
 public class Forecast {
 	private String label;

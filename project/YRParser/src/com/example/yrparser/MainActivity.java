@@ -34,14 +34,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 	 * app, one at a time.
 	 */
 	private ViewPager viewPager;
-	private List<Forecast> forecastList;
-	private static ForecastAdapter forecastAdapter;
-	private ForecastData[] forecast_data;
-
 	private static final int NUM_TABS = 3;
 	private static final String FORECAST_URL = "http://www.yr.no/sted/Sverige/Sk%C3%A5ne/Malm%C3%B6/forecast.xml";
-	private int CURRENT_TAB = 0;
-	private int CURRENT_FORECAST_URL;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -129,10 +123,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 		@Override
 		public Fragment getItem(int position) {
 			switch (position) {
-			// case 1:
-			// return HourByHourFragment.newInstance(position);
-			// case 2:
-			// return LongTermFragment.newInstance(position);
+			case 1:
+				return HourByHourFragment.newInstance(position);
+			case 2:
+				return LongTermFragment.newInstance(position);
 			default:
 				return OverviewFragment.newInstance(position);
 			}
@@ -168,8 +162,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		private ForecastAdapter overviewAdapter;
 
-		// private int position;
-
 		/**
 		 * Create a new instance of OverviewFragment, providing "pos" as an
 		 * argument.
@@ -183,26 +175,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			return fragment;
 		}
-
-		// /**
-		// * The Fragment's UI is just a simple text view showing its instance
-		// * number.
-		// */
-		// @Override
-		// public View onCreateView(LayoutInflater inflater, ViewGroup
-		// container,
-		// Bundle savedInstanceState) {
-		//
-		// // data = (ForecastData[]) getArguments().getSerializable(
-		// // FORECASTDATA_KEY);
-		//
-		// View v = inflater.inflate(R.layout.fragment_overview_list,
-		// container, false);
-		// View tv = v.findViewById(R.id.text);
-		// ((TextView) tv).setText("Forecast Overview");
-		//
-		// return v;
-		// }
 
 		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
@@ -221,17 +193,17 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			// Prepare the loader. Either re-connect with an existing one,
 			// or start a new one.
-			Bundle urlBundle = new Bundle();
-			urlBundle.putString(FORECAST_URL, FORECAST_URL);
-			getLoaderManager().initLoader(0, urlBundle, this);
 
-			// new ForecastLoaderTask(this).execute(FORECAST_URL);
+			Bundle loaderBundle = new Bundle();
+			loaderBundle.putString(FORECAST_URL, FORECAST_URL);
+			getLoaderManager().initLoader(getArguments().getInt("pos"),
+					loaderBundle, this);
 		}
 
 		@Override
-		public Loader<List<Forecast>> onCreateLoader(int id, Bundle urlBundle) {
+		public Loader<List<Forecast>> onCreateLoader(int id, Bundle loaderBundle) {
 			return new ForecastListLoader(getActivity(),
-					urlBundle.getString(FORECAST_URL));
+					loaderBundle.getString(FORECAST_URL));
 		}
 
 		@Override
@@ -253,18 +225,145 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		}
 
-		// @Override
-		// public void onFetchSuccess(ForecastData[] data) {
-		// forecast_data = data;
-		// setListAdapter(new ForecastAdapter(getActivity(),
-		// R.layout.forecast_row, data));
-		// prog.dismiss();
-		// }
-		//
-		// @Override
-		// public void onFetchFailure() {
-		// prog.dismiss();
-		// }
+	}
+
+	public static class HourByHourFragment extends SherlockListFragment
+			implements LoaderManager.LoaderCallbacks<List<Forecast>> {
+
+		private ForecastAdapter hourByHourAdapter;
+
+		/**
+		 * Create a new instance of HourByHourFragment, providing "pos" as an
+		 * argument.
+		 */
+		static HourByHourFragment newInstance(int pos) {
+			HourByHourFragment fragment = new HourByHourFragment();
+
+			Bundle args = new Bundle();
+			args.putInt("pos", pos);
+			fragment.setArguments(args);
+
+			return fragment;
+		}
+
+		@Override
+		public void onActivityCreated(Bundle savedInstanceState) {
+			super.onActivityCreated(savedInstanceState);
+
+			// Initially there is no data
+			setEmptyText("Testar tom lista");
+
+			// Create an empty adapter we will use to display the loaded data.
+			hourByHourAdapter = new ForecastAdapter(getActivity(),
+					R.layout.forecast_row);
+			setListAdapter(hourByHourAdapter);
+
+			// Start out with a progress indicator.
+			setListShown(false);
+
+			// Prepare the loader. Either re-connect with an existing one,
+			// or start a new one.
+
+			Bundle loaderBundle = new Bundle();
+			loaderBundle.putString(FORECAST_URL, FORECAST_URL);
+			getLoaderManager().initLoader(getArguments().getInt("pos"),
+					loaderBundle, this);
+		}
+
+		@Override
+		public Loader<List<Forecast>> onCreateLoader(int id, Bundle loaderBundle) {
+			return new ForecastListLoader(getActivity(),
+					loaderBundle.getString(FORECAST_URL));
+		}
+
+		@Override
+		public void onLoadFinished(Loader<List<Forecast>> loader,
+				List<Forecast> data) {
+			hourByHourAdapter.setData(data);
+			// The list should now be shown.
+			if (isResumed()) {
+				setListShown(true);
+			} else {
+				setListShownNoAnimation(true);
+			}
+
+		}
+
+		@Override
+		public void onLoaderReset(Loader<List<Forecast>> arg0) {
+			hourByHourAdapter.setData(null);
+
+		}
+
+	}
+
+	public static class LongTermFragment extends SherlockListFragment implements
+			LoaderManager.LoaderCallbacks<List<Forecast>> {
+
+		private ForecastAdapter longTermAdapter;
+
+		/**
+		 * Create a new instance of LongTermFragment, providing "pos" as an
+		 * argument.
+		 */
+		static LongTermFragment newInstance(int pos) {
+			LongTermFragment fragment = new LongTermFragment();
+
+			Bundle args = new Bundle();
+			args.putInt("pos", pos);
+			fragment.setArguments(args);
+
+			return fragment;
+		}
+
+		@Override
+		public void onActivityCreated(Bundle savedInstanceState) {
+			super.onActivityCreated(savedInstanceState);
+
+			// Initially there is no data
+			setEmptyText("Testar tom lista");
+
+			// Create an empty adapter we will use to display the loaded data.
+			longTermAdapter = new ForecastAdapter(getActivity(),
+					R.layout.forecast_row);
+			setListAdapter(longTermAdapter);
+
+			// Start out with a progress indicator.
+			setListShown(false);
+
+			// Prepare the loader. Either re-connect with an existing one,
+			// or start a new one.
+
+			Bundle loaderBundle = new Bundle();
+			loaderBundle.putString(FORECAST_URL, FORECAST_URL);
+			getLoaderManager().initLoader(getArguments().getInt("pos"),
+					loaderBundle, this);
+		}
+
+		@Override
+		public Loader<List<Forecast>> onCreateLoader(int id, Bundle loaderBundle) {
+			return new ForecastListLoader(getActivity(),
+					loaderBundle.getString(FORECAST_URL));
+		}
+
+		@Override
+		public void onLoadFinished(Loader<List<Forecast>> loader,
+				List<Forecast> data) {
+			longTermAdapter.setData(data);
+			// The list should now be shown.
+			if (isResumed()) {
+				setListShown(true);
+			} else {
+				setListShownNoAnimation(true);
+			}
+
+		}
+
+		@Override
+		public void onLoaderReset(Loader<List<Forecast>> arg0) {
+			longTermAdapter.setData(null);
+
+		}
 
 	}
 
