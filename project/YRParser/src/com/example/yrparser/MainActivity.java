@@ -11,6 +11,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -247,19 +250,26 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 
 		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			View view = inflater.inflate(R.layout.fragment_overview_list, null);
+			return view;
+		}
+
+		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
 			super.onActivityCreated(savedInstanceState);
 
 			// Initially there is no data
-			setEmptyText("Testar tom lista");
+			// setEmptyText("Testar tom lista");
 
 			// Create an empty adapter we will use to display the loaded data.
 			hourByHourAdapter = new ForecastAdapter(getActivity(),
 					R.layout.forecast_row);
-			setListAdapter(hourByHourAdapter);
+			// setListAdapter(hourByHourAdapter);
 
 			// Start out with a progress indicator.
-			setListShown(false);
+			// setListShown(false);
 
 			// Prepare the loader. Either re-connect with an existing one,
 			// or start a new one.
@@ -282,9 +292,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 			hourByHourAdapter.setData(data);
 			// The list should now be shown.
 			if (isResumed()) {
-				setListShown(true);
+				// setListShown(true);
 			} else {
-				setListShownNoAnimation(true);
+				// setListShownNoAnimation(true);
 			}
 
 		}
