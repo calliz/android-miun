@@ -14,8 +14,11 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.LayoutParams;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.SherlockListFragment;
 
@@ -131,7 +134,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			case 2:
 				return LongTermFragment.newInstance(position);
 			default:
-				return OverviewFragment.newInstance(position);
+				return MainFragment.newInstance(position);
 			}
 		}
 
@@ -178,6 +181,19 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 			return fragment;
 		}
+
+		//
+		// @Override
+		// public View onCreateView(LayoutInflater inflater, ViewGroup
+		// container,
+		// Bundle savedInstanceState) {
+		// View parent = super.onCreateView(inflater, container,
+		// savedInstanceState);
+		// ViewGroup view = (ViewGroup) inflater.inflate(
+		// R.layout.fragment_overview_list, container, false);
+		// ((ViewGroup) parent).addView(view, 0);
+		// return parent;
+		// }
 
 		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
@@ -250,26 +266,19 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 
 		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View view = inflater.inflate(R.layout.fragment_overview_list, null);
-			return view;
-		}
-
-		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
 			super.onActivityCreated(savedInstanceState);
 
 			// Initially there is no data
-			// setEmptyText("Testar tom lista");
+			setEmptyText("Testar tom lista");
 
 			// Create an empty adapter we will use to display the loaded data.
 			hourByHourAdapter = new ForecastAdapter(getActivity(),
 					R.layout.forecast_row);
-			// setListAdapter(hourByHourAdapter);
+			setListAdapter(hourByHourAdapter);
 
 			// Start out with a progress indicator.
-			// setListShown(false);
+			setListShown(false);
 
 			// Prepare the loader. Either re-connect with an existing one,
 			// or start a new one.
@@ -292,9 +301,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 			hourByHourAdapter.setData(data);
 			// The list should now be shown.
 			if (isResumed()) {
-				// setListShown(true);
+				setListShown(true);
 			} else {
-				// setListShownNoAnimation(true);
+				setListShownNoAnimation(true);
 			}
 
 		}
@@ -375,6 +384,67 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		}
 
+	}
+
+	public static class MainFragment extends SherlockFragment {
+
+		/**
+		 * Create a new instance of MainFragment.
+		 */
+		static MainFragment newInstance(int pos) {
+			MainFragment fragment = new MainFragment();
+			Bundle args = new Bundle();
+			args.putInt("pos", pos);
+			fragment.setArguments(args);
+			return fragment;
+		}
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			View view = inflater
+					.inflate(R.layout.fragment_root_container, null);
+			int pos = getArguments().getInt("pos");
+
+			FragmentTransaction transaction = getChildFragmentManager()
+					.beginTransaction();
+
+			transaction.add(R.id.overview_forecast,
+					OverviewFragment.newInstance(pos));
+
+			transaction.add(R.id.sun_forecast,
+					TextFragment.newInstance("TextFragment", pos));
+
+			transaction.commit();
+			return view;
+		}
+
+		public static class TextFragment extends SherlockFragment {
+
+			private static final String ARG_INDEX = "TextFragment.index";
+			private static final String ARG_TEXT = "TextFragment.text";
+
+			public static TextFragment newInstance(String text, int index) {
+				TextFragment fragment = new TextFragment();
+				Bundle args = new Bundle();
+				args.putString(ARG_TEXT, text);
+				args.putInt(ARG_INDEX, index);
+				fragment.setArguments(args);
+				return fragment;
+			}
+
+			@Override
+			public View onCreateView(LayoutInflater inflater,
+					ViewGroup container, Bundle savedInstanceState) {
+				TextView textView = new TextView(getActivity());
+				textView.setLayoutParams(new LayoutParams(
+						LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+				textView.setText(getArguments().getString(ARG_TEXT) + " "
+						+ getArguments().getInt(ARG_INDEX));
+				return textView;
+			}
+
+		}
 	}
 
 }
