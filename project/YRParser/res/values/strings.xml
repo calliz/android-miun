@@ -7,5 +7,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_xmlparser">XMLParser</string>
     <string name="forecast_symbol">forecast_symbol</string>
+    <string name="overview">Overview</string>
+    <string name="sunrise_sunset">Sun</string>
 
 </resources>

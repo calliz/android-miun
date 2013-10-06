@@ -1,7 +1,5 @@
 package com.example.yrparser;
 
-import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,10 +50,10 @@ public class ForecastAdapter extends ArrayAdapter<Forecast> {
 		TextView txtInfo;
 	}
 
-	public void setData(List<Forecast> forecastList) {
+	public void setData(WeatherData weatherData) {
 		clear();
-		if (forecastList != null) {
-			for (Forecast forecast : forecastList) {
+		if (weatherData != null) {
+			for (Forecast forecast : weatherData) {
 				add(forecast);
 			}
 		}

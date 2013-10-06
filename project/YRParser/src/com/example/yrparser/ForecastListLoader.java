@@ -2,7 +2,6 @@ package com.example.yrparser;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.List;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -12,11 +11,11 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.support.v4.content.AsyncTaskLoader;
 
-public class ForecastListLoader extends AsyncTaskLoader<List<Forecast>> {
+public class ForecastListLoader extends AsyncTaskLoader<WeatherData> {
 	// TODO fetch from somewhere else. e.g. preferences?
 	InterestingConfigChanges lastConfig = new InterestingConfigChanges();
 	private String forecastUrl;
-	private List<Forecast> forecastList;
+	private WeatherData weatherData;
 
 	public ForecastListLoader(Context context, String forecastUrl) {
 		super(context);
@@ -24,10 +23,10 @@ public class ForecastListLoader extends AsyncTaskLoader<List<Forecast>> {
 	}
 
 	@Override
-	public List<Forecast> loadInBackground() {
-		List<Forecast> forecastList = null;
+	public WeatherData loadInBackground() {
+		WeatherData weatherData = null;
 		try {
-			forecastList = new ForecastXMLParser().parse(forecastUrl);
+			weatherData = new ForecastXMLParser().parse(forecastUrl);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -39,15 +38,15 @@ public class ForecastListLoader extends AsyncTaskLoader<List<Forecast>> {
 			e.printStackTrace();
 		}
 
-		for (Forecast fc : forecastList) {
+		for (Forecast fc : weatherData) {
 			fc.generateWeatherInfo();
 		}
 
-		return forecastList;
+		return weatherData;
 	}
 
 	@Override
-	public void deliverResult(List<Forecast> data) {
+	public void deliverResult(WeatherData data) {
 		if (isReset()) {
 			// An async query came in while the loader is stopped. We
 			// don't need the result.
@@ -55,8 +54,8 @@ public class ForecastListLoader extends AsyncTaskLoader<List<Forecast>> {
 				onReleaseResources(data);
 			}
 		}
-		List<Forecast> oldForecasts = data;
-		forecastList = data;
+		WeatherData oldWeatherData = data;
+		weatherData = data;
 
 		if (isStarted()) {
 			// If the Loader is currently started, we can immediately
@@ -67,18 +66,18 @@ public class ForecastListLoader extends AsyncTaskLoader<List<Forecast>> {
 		// At this point we can release the resources associated with
 		// 'oldForecasts' if needed; now that the new result is delivered we
 		// know that it is no longer in use.
-		if (oldForecasts != null) {
-			onReleaseResources(oldForecasts);
+		if (oldWeatherData != null) {
+			onReleaseResources(oldWeatherData);
 		}
 
 	}
 
 	@Override
 	protected void onStartLoading() {
-		if (forecastList != null) {
+		if (weatherData != null) {
 			// If we currently have a result available, deliver it
 			// immediately.
-			deliverResult(forecastList);
+			deliverResult(weatherData);
 		}
 
 		// // Start watching for changes in the app data.
@@ -91,7 +90,7 @@ public class ForecastListLoader extends AsyncTaskLoader<List<Forecast>> {
 		boolean configChange = lastConfig.applyNewConfig(getContext()
 				.getResources());
 
-		if (takeContentChanged() || forecastList == null || configChange) {
+		if (takeContentChanged() || weatherData == null || configChange) {
 			// If the data has changed since the last time it was loaded
 			// or is not currently available, start a load.
 			forceLoad();
@@ -105,7 +104,7 @@ public class ForecastListLoader extends AsyncTaskLoader<List<Forecast>> {
 	}
 
 	@Override
-	public void onCanceled(List<Forecast> data) {
+	public void onCanceled(WeatherData data) {
 		super.onCanceled(data);
 
 		// At this point we can release the resources associated with 'apps' if
@@ -125,9 +124,9 @@ public class ForecastListLoader extends AsyncTaskLoader<List<Forecast>> {
 
 		// At this point we can release the resources associated with
 		// 'forecastList' if needed
-		if (forecastList != null) {
-			onReleaseResources(forecastList);
-			forecastList = null;
+		if (weatherData != null) {
+			onReleaseResources(weatherData);
+			weatherData = null;
 		}
 
 		// // Stop monitoring for changes
@@ -141,7 +140,7 @@ public class ForecastListLoader extends AsyncTaskLoader<List<Forecast>> {
 	 * Helper function to take care of releasing resources associated with an
 	 * actively loaded data set.
 	 */
-	private void onReleaseResources(List<Forecast> data) {
+	private void onReleaseResources(WeatherData data) {
 		// For a simple List<> there is nothing to do. For something
 		// like a Cursor, we would close it here.
 	}

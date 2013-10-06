@@ -1,7 +1,5 @@
 package com.example.yrparser;
 
-import java.util.List;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -164,7 +163,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public static class OverviewFragment extends SherlockListFragment implements
-			LoaderManager.LoaderCallbacks<List<Forecast>> {
+			LoaderManager.LoaderCallbacks<WeatherData> {
 
 		private ForecastAdapter overviewAdapter;
 
@@ -220,14 +219,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 
 		@Override
-		public Loader<List<Forecast>> onCreateLoader(int id, Bundle loaderBundle) {
+		public Loader<WeatherData> onCreateLoader(int id, Bundle loaderBundle) {
 			return new ForecastListLoader(getActivity(),
 					loaderBundle.getString(FORECAST_URL));
 		}
 
 		@Override
-		public void onLoadFinished(Loader<List<Forecast>> loader,
-				List<Forecast> data) {
+		public void onLoadFinished(Loader<WeatherData> loader, WeatherData data) {
 			overviewAdapter.setData(data);
 			// The list should now be shown.
 			if (isResumed()) {
@@ -239,7 +237,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 
 		@Override
-		public void onLoaderReset(Loader<List<Forecast>> arg0) {
+		public void onLoaderReset(Loader<WeatherData> arg0) {
 			overviewAdapter.setData(null);
 
 		}
@@ -247,7 +245,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public static class HourByHourFragment extends SherlockListFragment
-			implements LoaderManager.LoaderCallbacks<List<Forecast>> {
+			implements LoaderManager.LoaderCallbacks<WeatherData> {
 
 		private ForecastAdapter hourByHourAdapter;
 
@@ -290,14 +288,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 
 		@Override
-		public Loader<List<Forecast>> onCreateLoader(int id, Bundle loaderBundle) {
+		public Loader<WeatherData> onCreateLoader(int id, Bundle loaderBundle) {
 			return new ForecastListLoader(getActivity(),
 					loaderBundle.getString(FORECAST_URL));
 		}
 
 		@Override
-		public void onLoadFinished(Loader<List<Forecast>> loader,
-				List<Forecast> data) {
+		public void onLoadFinished(Loader<WeatherData> loader, WeatherData data) {
 			hourByHourAdapter.setData(data);
 			// The list should now be shown.
 			if (isResumed()) {
@@ -309,7 +306,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 
 		@Override
-		public void onLoaderReset(Loader<List<Forecast>> arg0) {
+		public void onLoaderReset(Loader<WeatherData> arg0) {
 			hourByHourAdapter.setData(null);
 
 		}
@@ -317,7 +314,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	public static class LongTermFragment extends SherlockListFragment implements
-			LoaderManager.LoaderCallbacks<List<Forecast>> {
+			LoaderManager.LoaderCallbacks<WeatherData> {
 
 		private ForecastAdapter longTermAdapter;
 
@@ -360,14 +357,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 
 		@Override
-		public Loader<List<Forecast>> onCreateLoader(int id, Bundle loaderBundle) {
+		public Loader<WeatherData> onCreateLoader(int id, Bundle loaderBundle) {
 			return new ForecastListLoader(getActivity(),
 					loaderBundle.getString(FORECAST_URL));
 		}
 
 		@Override
-		public void onLoadFinished(Loader<List<Forecast>> loader,
-				List<Forecast> data) {
+		public void onLoadFinished(Loader<WeatherData> loader, WeatherData data) {
 			longTermAdapter.setData(data);
 			// The list should now be shown.
 			if (isResumed()) {
@@ -379,7 +375,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 
 		@Override
-		public void onLoaderReset(Loader<List<Forecast>> arg0) {
+		public void onLoaderReset(Loader<WeatherData> arg0) {
 			longTermAdapter.setData(null);
 
 		}
@@ -409,10 +405,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 			FragmentTransaction transaction = getChildFragmentManager()
 					.beginTransaction();
 
-			transaction.add(R.id.overview_forecast,
+			transaction.replace(R.id.overview_forecast,
 					OverviewFragment.newInstance(pos));
 
-			transaction.add(R.id.sun_forecast,
+			transaction.replace(R.id.sun_forecast,
 					TextFragment.newInstance("TextFragment", pos));
 
 			transaction.commit();
@@ -436,6 +432,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			@Override
 			public View onCreateView(LayoutInflater inflater,
 					ViewGroup container, Bundle savedInstanceState) {
+
 				TextView textView = new TextView(getActivity());
 				textView.setLayoutParams(new LayoutParams(
 						LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
@@ -445,6 +442,89 @@ public class MainActivity extends SherlockFragmentActivity implements
 			}
 
 		}
+	}
+
+	public static class SunFragment extends SherlockFragment implements
+			LoaderManager.LoaderCallbacks<WeatherData> {
+
+		private ForecastAdapter sunAdapter;
+
+		/**
+		 * Create a new instance of HourByHourFragment, providing "pos" as an
+		 * argument.
+		 */
+		static SunFragment newInstance(int pos) {
+			SunFragment fragment = new SunFragment();
+
+			Bundle args = new Bundle();
+			args.putInt("pos", pos);
+			fragment.setArguments(args);
+
+			return fragment;
+		}
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+
+			FrameLayout textView = new TextView(getActivity());
+			textView.setLayoutParams(new LayoutParams(
+					LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+			textView.setText(getArguments().getString(ARG_TEXT) + " "
+					+ getArguments().getInt(ARG_INDEX));
+			return textView;
+		}
+
+		@Override
+		public void onActivityCreated(Bundle savedInstanceState) {
+			super.onActivityCreated(savedInstanceState);
+
+			// // Initially there is no data
+			// setEmptyText("Testar tom lista");
+
+			// Create an empty adapter we will use to display the loaded data.
+			sunAdapter = new ForecastAdapter(getActivity(), R.layout.sun_row);
+			// TODO implementera custom view i onCreateView enligt
+			// http://stackoverflow.com/questions/15004897/custom-adapter-for-android-fragment-with-imageview-and-textview
+
+			FrameLayout sunForecastLayout = (sunAdapter);
+
+			// Start out with a progress indicator.
+			setListShown(false);
+
+			// Prepare the loader. Either re-connect with an existing one,
+			// or start a new one.
+
+			Bundle loaderBundle = new Bundle();
+			loaderBundle.putString(FORECAST_URL, FORECAST_URL);
+			getLoaderManager().initLoader(getArguments().getInt("pos"),
+					loaderBundle, this);
+		}
+
+		@Override
+		public Loader<WeatherData> onCreateLoader(int id, Bundle loaderBundle) {
+			return new ForecastListLoader(getActivity(),
+					loaderBundle.getString(FORECAST_URL));
+		}
+
+		@Override
+		public void onLoadFinished(Loader<WeatherData> loader, WeatherData data) {
+			sunAdapter.setData(data);
+			// The list should now be shown.
+			if (isResumed()) {
+				setListShown(true);
+			} else {
+				setListShownNoAnimation(true);
+			}
+
+		}
+
+		@Override
+		public void onLoaderReset(Loader<WeatherData> arg0) {
+			sunAdapter.setData(null);
+
+		}
+
 	}
 
 }

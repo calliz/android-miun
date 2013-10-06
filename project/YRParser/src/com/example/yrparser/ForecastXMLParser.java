@@ -7,20 +7,20 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
+
+import android.util.Log;
 
 public class ForecastXMLParser {
 	private XmlPullParserFactory parserFactory;
 	private XmlPullParser parser;
 
 	private InputStream urlStream;
-	private List<Forecast> forecastList;
+	private WeatherData forecastContainer;
 	private Forecast forecast;
 
 	/**
@@ -34,7 +34,7 @@ public class ForecastXMLParser {
 	private static final String WIND_SPEED = "windSpeed";
 	private static final String TEMPERATURE = "temperature";
 
-	public List<Forecast> parse(String forecastURL)
+	public WeatherData parse(String forecastURL)
 			throws XmlPullParserException, MalformedURLException, IOException {
 
 		parserFactory = XmlPullParserFactory.newInstance();
@@ -42,7 +42,7 @@ public class ForecastXMLParser {
 		urlStream = downloadUrl(forecastURL);
 		parser.setInput(urlStream, null);
 		int eventType = parser.getEventType();
-		forecastList = new ArrayList<Forecast>();
+		forecastContainer = new WeatherData();
 		String tagName;
 		int nbrAttributes = 0;
 		String sunrise = null;
@@ -61,9 +61,13 @@ public class ForecastXMLParser {
 						if (parser.getAttributeName(i).equals("rise")) {
 							// save sunrise
 							sunrise = parser.getAttributeValue(i);
+							forecastContainer.setSunrise(sunrise);
+							Log.d("SUN", sunrise);
 						} else if (parser.getAttributeName(i).equals("set")) {
 							// save sunset
 							sunset = parser.getAttributeValue(i);
+							forecastContainer.setSunset(sunset);
+							Log.d("SUN", sunset);
 						}
 					}
 				}
@@ -151,13 +155,13 @@ public class ForecastXMLParser {
 					forecast.setSunset(sunset);
 
 					// add Forecast to ForecastList!!!
-					forecastList.add(forecast);
+					forecastContainer.addForecastToForecastList(forecast);
 				}
 				break;
 			}
 			eventType = parser.next();
 		}
-		return forecastList;
+		return forecastContainer;
 	}
 
 	private InputStream downloadUrl(String forecastURL)
