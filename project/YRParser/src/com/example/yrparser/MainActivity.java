@@ -12,11 +12,10 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.LayoutParams;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.SherlockListFragment;
@@ -160,88 +159,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 			}
 			return s;
 		}
-	}
-
-	public static class OverviewFragment extends SherlockListFragment implements
-			LoaderManager.LoaderCallbacks<WeatherData> {
-
-		private ForecastAdapter overviewAdapter;
-
-		/**
-		 * Create a new instance of OverviewFragment, providing "pos" as an
-		 * argument.
-		 */
-		static OverviewFragment newInstance(int pos) {
-			OverviewFragment fragment = new OverviewFragment();
-
-			Bundle args = new Bundle();
-			args.putInt("pos", pos);
-			fragment.setArguments(args);
-
-			return fragment;
-		}
-
-		//
-		// @Override
-		// public View onCreateView(LayoutInflater inflater, ViewGroup
-		// container,
-		// Bundle savedInstanceState) {
-		// View parent = super.onCreateView(inflater, container,
-		// savedInstanceState);
-		// ViewGroup view = (ViewGroup) inflater.inflate(
-		// R.layout.fragment_overview_list, container, false);
-		// ((ViewGroup) parent).addView(view, 0);
-		// return parent;
-		// }
-
-		@Override
-		public void onActivityCreated(Bundle savedInstanceState) {
-			super.onActivityCreated(savedInstanceState);
-
-			// Initially there is no data
-			setEmptyText("Testar tom lista");
-
-			// Create an empty adapter we will use to display the loaded data.
-			overviewAdapter = new ForecastAdapter(getActivity(),
-					R.layout.forecast_row);
-			setListAdapter(overviewAdapter);
-
-			// Start out with a progress indicator.
-			setListShown(false);
-
-			// Prepare the loader. Either re-connect with an existing one,
-			// or start a new one.
-
-			Bundle loaderBundle = new Bundle();
-			loaderBundle.putString(FORECAST_URL, FORECAST_URL);
-			getLoaderManager().initLoader(getArguments().getInt("pos"),
-					loaderBundle, this);
-		}
-
-		@Override
-		public Loader<WeatherData> onCreateLoader(int id, Bundle loaderBundle) {
-			return new ForecastListLoader(getActivity(),
-					loaderBundle.getString(FORECAST_URL));
-		}
-
-		@Override
-		public void onLoadFinished(Loader<WeatherData> loader, WeatherData data) {
-			overviewAdapter.setData(data);
-			// The list should now be shown.
-			if (isResumed()) {
-				setListShown(true);
-			} else {
-				setListShownNoAnimation(true);
-			}
-
-		}
-
-		@Override
-		public void onLoaderReset(Loader<WeatherData> arg0) {
-			overviewAdapter.setData(null);
-
-		}
-
 	}
 
 	public static class HourByHourFragment extends SherlockListFragment
@@ -408,53 +325,54 @@ public class MainActivity extends SherlockFragmentActivity implements
 			transaction.replace(R.id.overview_forecast,
 					OverviewFragment.newInstance(pos));
 
-			transaction.replace(R.id.sun_forecast,
-					TextFragment.newInstance("TextFragment", pos));
+			transaction
+					.replace(R.id.sun_forecast, SunFragment.newInstance(pos));
 
 			transaction.commit();
 			return view;
 		}
 
-		public static class TextFragment extends SherlockFragment {
+		// public static class TextFragment extends SherlockFragment {
+		//
+		// private static final String ARG_INDEX = "TextFragment.index";
+		// private static final String ARG_TEXT = "TextFragment.text";
+		//
+		// public static TextFragment newInstance(String text, int index) {
+		// TextFragment fragment = new TextFragment();
+		// Bundle args = new Bundle();
+		// args.putString(ARG_TEXT, text);
+		// args.putInt(ARG_INDEX, index);
+		// fragment.setArguments(args);
+		// return fragment;
+		// }
+		//
+		// @Override
+		// public View onCreateView(LayoutInflater inflater,
+		// ViewGroup container, Bundle savedInstanceState) {
+		//
+		// TextView textView = new TextView(getActivity());
+		// textView.setLayoutParams(new LayoutParams(
+		// LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+		// textView.setText(getArguments().getString(ARG_TEXT) + " "
+		// + getArguments().getInt(ARG_INDEX));
+		// return textView;
+		// }
+		//
+		// }
 
-			private static final String ARG_INDEX = "TextFragment.index";
-			private static final String ARG_TEXT = "TextFragment.text";
-
-			public static TextFragment newInstance(String text, int index) {
-				TextFragment fragment = new TextFragment();
-				Bundle args = new Bundle();
-				args.putString(ARG_TEXT, text);
-				args.putInt(ARG_INDEX, index);
-				fragment.setArguments(args);
-				return fragment;
-			}
-
-			@Override
-			public View onCreateView(LayoutInflater inflater,
-					ViewGroup container, Bundle savedInstanceState) {
-
-				TextView textView = new TextView(getActivity());
-				textView.setLayoutParams(new LayoutParams(
-						LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-				textView.setText(getArguments().getString(ARG_TEXT) + " "
-						+ getArguments().getInt(ARG_INDEX));
-				return textView;
-			}
-
-		}
 	}
 
-	public static class SunFragment extends SherlockFragment implements
+	public static class OverviewFragment extends SherlockListFragment implements
 			LoaderManager.LoaderCallbacks<WeatherData> {
 
-		private ForecastAdapter sunAdapter;
+		private ForecastAdapter overviewAdapter;
 
 		/**
-		 * Create a new instance of HourByHourFragment, providing "pos" as an
+		 * Create a new instance of OverviewFragment, providing "pos" as an
 		 * argument.
 		 */
-		static SunFragment newInstance(int pos) {
-			SunFragment fragment = new SunFragment();
+		static OverviewFragment newInstance(int pos) {
+			OverviewFragment fragment = new OverviewFragment();
 
 			Bundle args = new Bundle();
 			args.putInt("pos", pos);
@@ -463,31 +381,31 @@ public class MainActivity extends SherlockFragmentActivity implements
 			return fragment;
 		}
 
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-
-			FrameLayout textView = new TextView(getActivity());
-			textView.setLayoutParams(new LayoutParams(
-					LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-			textView.setText(getArguments().getString(ARG_TEXT) + " "
-					+ getArguments().getInt(ARG_INDEX));
-			return textView;
-		}
+		//
+		// @Override
+		// public View onCreateView(LayoutInflater inflater, ViewGroup
+		// container,
+		// Bundle savedInstanceState) {
+		// View parent = super.onCreateView(inflater, container,
+		// savedInstanceState);
+		// ViewGroup view = (ViewGroup) inflater.inflate(
+		// R.layout.fragment_overview_list, container, false);
+		// ((ViewGroup) parent).addView(view, 0);
+		// return parent;
+		// }
 
 		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
 			super.onActivityCreated(savedInstanceState);
 
-			// // Initially there is no data
-			// setEmptyText("Testar tom lista");
+			// Initially there is no data
+			setEmptyText("Testar tom lista");
 
-			// Create an empty adapter we will use to display the loaded data.
-			sunAdapter = new ForecastAdapter(getActivity(), R.layout.sun_row);
-			// TODO implementera custom view i onCreateView enligt
-			// http://stackoverflow.com/questions/15004897/custom-adapter-for-android-fragment-with-imageview-and-textview
-
-			FrameLayout sunForecastLayout = (sunAdapter);
+			// Create an empty adapter we will use to display the loaded
+			// data.
+			overviewAdapter = new ForecastAdapter(getActivity(),
+					R.layout.forecast_row);
+			setListAdapter(overviewAdapter);
 
 			// Start out with a progress indicator.
 			setListShown(false);
@@ -509,7 +427,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void onLoadFinished(Loader<WeatherData> loader, WeatherData data) {
-			sunAdapter.setData(data);
+			overviewAdapter.setData(data);
 			// The list should now be shown.
 			if (isResumed()) {
 				setListShown(true);
@@ -521,10 +439,89 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void onLoaderReset(Loader<WeatherData> arg0) {
-			sunAdapter.setData(null);
+			overviewAdapter.setData(null);
 
 		}
-
 	}
 
+	public static class SunFragment extends SherlockFragment implements
+			LoaderManager.LoaderCallbacks<WeatherData> {
+
+		private ImageView sunriseSymbol;
+		private TextView sunriseInfo;
+		private View rootview;
+		private ImageView sunsetSymbol;
+		private TextView sunsetInfo;
+
+		/**
+		 * Create a new instance of HourByHourFragment, providing "pos" as an
+		 * argument.
+		 */
+		static SunFragment newInstance(int pos) {
+			SunFragment fragment = new SunFragment();
+
+			Bundle args = new Bundle();
+			args.putInt("pos", pos);
+			fragment.setArguments(args);
+
+			return fragment;
+		}
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			rootview = inflater.inflate(R.layout.sun_row, container, false);
+
+			// sunriseSymbol = (ImageView) rootview
+			// .findViewById(R.id.sunrise_symbol);
+			sunriseInfo = (TextView) rootview.findViewById(R.id.sunrise_info);
+
+			sunsetSymbol = (ImageView) rootview
+					.findViewById(R.id.sunset_symbol);
+			sunsetInfo = (TextView) rootview.findViewById(R.id.sunset_info);
+
+			return rootview;
+		}
+
+		// @Override
+		// public void onViewCreated(View view, Bundle savedInstanceState) {
+		// super.onViewCreated(view, savedInstanceState);
+		//
+		// }
+		//
+		public void onActivityCreated(Bundle savedInstanceState) {
+			super.onActivityCreated(savedInstanceState);
+
+			// TODO implementera custom view i onCreateView enligt
+			// http://stackoverflow.com/questions/15004897/custom-adapter-for-android-fragment-with-imageview-and-textview
+
+			// Prepare the loader. Either re-connect with an existing one,
+			// or start a new one.
+			Bundle loaderBundle = new Bundle();
+			loaderBundle.putString(FORECAST_URL, FORECAST_URL);
+			getLoaderManager().initLoader(getArguments().getInt("pos"),
+					loaderBundle, this);
+		}
+
+		@Override
+		public Loader<WeatherData> onCreateLoader(int id, Bundle loaderBundle) {
+			return new ForecastListLoader(getActivity(),
+					loaderBundle.getString(FORECAST_URL));
+		}
+
+		@Override
+		public void onLoadFinished(Loader<WeatherData> loader, WeatherData data) {
+
+			sunriseInfo.setText("blabla");
+			// sunriseSymbol.setImageResource(R.drawable.sym_01n);
+
+			sunsetSymbol.setImageResource(R.drawable.sym_01n);
+			sunsetInfo.setText(data.getSunset());
+		}
+
+		@Override
+		public void onLoaderReset(Loader<WeatherData> arg0) {
+
+		}
+	}
 }
