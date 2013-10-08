@@ -132,7 +132,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			case 2:
 				return LongTermFragment.newInstance(position);
 			default:
-				return MainFragment.newInstance(position);
+				return SunFragment.newInstance(position);
 			}
 		}
 
@@ -299,159 +299,44 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	}
 
-	public static class MainFragment extends SherlockFragment {
-
-		/**
-		 * Create a new instance of MainFragment.
-		 */
-		static MainFragment newInstance(int pos) {
-			MainFragment fragment = new MainFragment();
-			Bundle args = new Bundle();
-			args.putInt("pos", pos);
-			fragment.setArguments(args);
-			return fragment;
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View view = inflater
-					.inflate(R.layout.fragment_root_container, null);
-			int pos = getArguments().getInt("pos");
-
-			FragmentTransaction transaction = getChildFragmentManager()
-					.beginTransaction();
-
-			transaction.replace(R.id.overview_forecast,
-					OverviewFragment.newInstance(pos));
-
-			transaction
-					.replace(R.id.sun_forecast, SunFragment.newInstance(pos));
-
-			transaction.commit();
-			return view;
-		}
-
-		// public static class TextFragment extends SherlockFragment {
-		//
-		// private static final String ARG_INDEX = "TextFragment.index";
-		// private static final String ARG_TEXT = "TextFragment.text";
-		//
-		// public static TextFragment newInstance(String text, int index) {
-		// TextFragment fragment = new TextFragment();
-		// Bundle args = new Bundle();
-		// args.putString(ARG_TEXT, text);
-		// args.putInt(ARG_INDEX, index);
-		// fragment.setArguments(args);
-		// return fragment;
-		// }
-		//
-		// @Override
-		// public View onCreateView(LayoutInflater inflater,
-		// ViewGroup container, Bundle savedInstanceState) {
-		//
-		// TextView textView = new TextView(getActivity());
-		// textView.setLayoutParams(new LayoutParams(
-		// LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-		// textView.setText(getArguments().getString(ARG_TEXT) + " "
-		// + getArguments().getInt(ARG_INDEX));
-		// return textView;
-		// }
-		//
-		// }
-
-	}
-
-	public static class OverviewFragment extends SherlockListFragment implements
-			LoaderManager.LoaderCallbacks<WeatherData> {
-
-		private ForecastAdapter overviewAdapter;
-
-		/**
-		 * Create a new instance of OverviewFragment, providing "pos" as an
-		 * argument.
-		 */
-		static OverviewFragment newInstance(int pos) {
-			OverviewFragment fragment = new OverviewFragment();
-
-			Bundle args = new Bundle();
-			args.putInt("pos", pos);
-			fragment.setArguments(args);
-
-			return fragment;
-		}
-
-		//
-		// @Override
-		// public View onCreateView(LayoutInflater inflater, ViewGroup
-		// container,
-		// Bundle savedInstanceState) {
-		// View parent = super.onCreateView(inflater, container,
-		// savedInstanceState);
-		// ViewGroup view = (ViewGroup) inflater.inflate(
-		// R.layout.fragment_overview_list, container, false);
-		// ((ViewGroup) parent).addView(view, 0);
-		// return parent;
-		// }
-
-		@Override
-		public void onActivityCreated(Bundle savedInstanceState) {
-			super.onActivityCreated(savedInstanceState);
-
-			// Initially there is no data
-			setEmptyText("Testar tom lista");
-
-			// Create an empty adapter we will use to display the loaded
-			// data.
-			overviewAdapter = new ForecastAdapter(getActivity(),
-					R.layout.forecast_row);
-			setListAdapter(overviewAdapter);
-
-			// Start out with a progress indicator.
-			setListShown(false);
-
-			// Prepare the loader. Either re-connect with an existing one,
-			// or start a new one.
-
-			Bundle loaderBundle = new Bundle();
-			loaderBundle.putString(FORECAST_URL, FORECAST_URL);
-			getLoaderManager().initLoader(getArguments().getInt("pos"),
-					loaderBundle, this);
-		}
-
-		@Override
-		public Loader<WeatherData> onCreateLoader(int id, Bundle loaderBundle) {
-			return new ForecastListLoader(getActivity(),
-					loaderBundle.getString(FORECAST_URL));
-		}
-
-		@Override
-		public void onLoadFinished(Loader<WeatherData> loader, WeatherData data) {
-			overviewAdapter.setData(data);
-			// The list should now be shown.
-			if (isResumed()) {
-				setListShown(true);
-			} else {
-				setListShownNoAnimation(true);
-			}
-
-		}
-
-		@Override
-		public void onLoaderReset(Loader<WeatherData> arg0) {
-			overviewAdapter.setData(null);
-
-		}
-	}
+	// public static class TextFragment extends SherlockFragment {
+	//
+	// private static final String ARG_INDEX = "TextFragment.index";
+	// private static final String ARG_TEXT = "TextFragment.text";
+	//
+	// public static TextFragment newInstance(String text, int index) {
+	// TextFragment fragment = new TextFragment();
+	// Bundle args = new Bundle();
+	// args.putString(ARG_TEXT, text);
+	// args.putInt(ARG_INDEX, index);
+	// fragment.setArguments(args);
+	// return fragment;
+	// }
+	//
+	// @Override
+	// public View onCreateView(LayoutInflater inflater,
+	// ViewGroup container, Bundle savedInstanceState) {
+	//
+	// TextView textView = new TextView(getActivity());
+	// textView.setLayoutParams(new LayoutParams(
+	// LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+	// textView.setText(getArguments().getString(ARG_TEXT) + " "
+	// + getArguments().getInt(ARG_INDEX));
+	// return textView;
+	// }
+	//
+	// }
 
 	public static class SunFragment extends SherlockFragment implements
 			LoaderManager.LoaderCallbacks<WeatherData> {
 
+		private View rootview;
 		private ImageView sunriseSymbol;
 		private TextView sunriseInfo;
-		private View rootview;
 		private ImageView sunsetSymbol;
 		private TextView sunsetInfo;
+		private ImageView overviewSymbol;
+		private TextView overviewInfo;
 
 		/**
 		 * Create a new instance of HourByHourFragment, providing "pos" as an
@@ -470,10 +355,15 @@ public class MainActivity extends SherlockFragmentActivity implements
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			rootview = inflater.inflate(R.layout.sun_row, container, false);
+			rootview = inflater.inflate(R.layout.fragment_root_container,
+					container, false);
 
-			// sunriseSymbol = (ImageView) rootview
-			// .findViewById(R.id.sunrise_symbol);
+			overviewSymbol = (ImageView) rootview
+					.findViewById(R.id.overview_symbol);
+			overviewInfo = (TextView) rootview.findViewById(R.id.overview_info);
+
+			sunriseSymbol = (ImageView) rootview
+					.findViewById(R.id.sunrise_symbol);
 			sunriseInfo = (TextView) rootview.findViewById(R.id.sunrise_info);
 
 			sunsetSymbol = (ImageView) rootview
@@ -483,12 +373,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 			return rootview;
 		}
 
-		// @Override
-		// public void onViewCreated(View view, Bundle savedInstanceState) {
-		// super.onViewCreated(view, savedInstanceState);
-		//
-		// }
-		//
 		public void onActivityCreated(Bundle savedInstanceState) {
 			super.onActivityCreated(savedInstanceState);
 
