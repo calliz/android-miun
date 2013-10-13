@@ -28,8 +28,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
             android:contentDescription="@string/forecast_symbol"
-            android:gravity="center_vertical|center_horizontal"
-            android:src="@drawable/sym_01d" />
+            android:gravity="center_vertical|center_horizontal" />
 
         <TextView
             android:id="@+id/overview_info"
@@ -38,7 +37,6 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:gravity="center_vertical|center_horizontal"
-            android:text="overview info 1"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -78,8 +76,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
             android:contentDescription="@string/forecast_symbol"
-            android:gravity="center_vertical|center_horizontal"
-            android:src="@drawable/sym_01d" />
+            android:gravity="center_vertical|center_horizontal" />
 
         <TextView
             android:id="@+id/sunrise_info"
@@ -88,7 +85,6 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:gravity="center_vertical|center_horizontal"
-            android:text="overview info 1"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -117,8 +113,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
             android:contentDescription="@string/forecast_symbol"
-            android:gravity="center_vertical|center_horizontal"
-            android:src="@drawable/sym_01d" />
+            android:gravity="center_vertical|center_horizontal" />
 
         <TextView
             android:id="@+id/sunset_info"
@@ -127,7 +122,6 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:gravity="center_vertical|center_horizontal"
-            android:text="overview info 2"
             android:textStyle="bold" />
     </LinearLayout>
 

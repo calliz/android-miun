@@ -138,7 +138,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 				return LongTermFragment.newInstance(position);
 			default:
 				Log.e("DEBUGGING", "MainActivity.getItem() -> case 0");
-				return SunFragment.newInstance(position);
+				return OverviewFragment.newInstance(position);
 			}
 		}
 
@@ -197,10 +197,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 			hourByHourAdapter = new HourByHourAdapter(getActivity(),
 					R.layout.forecast_row);
 
-			// Add list header
-			View hourByHourHeaderView = getActivity().getLayoutInflater()
-					.inflate(R.id.hourbyhourheader, null);
-			getListView().addHeaderView(hourByHourHeaderView);
+			// // Add list header
+			// View hourByHourHeaderView = getActivity().getLayoutInflater()
+			// .inflate(R.layout.hourbyhour_header, null);
+			// getListView().addHeaderView(hourByHourHeaderView);
 
 			setListAdapter(hourByHourAdapter);
 
@@ -294,6 +294,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 
 		@Override
+		public void onDestroyView() {
+			super.onDestroyView();
+			setListAdapter(null);
+		}
+
+		@Override
 		public Loader<WeatherData> onCreateLoader(int id, Bundle loaderBundle) {
 			return new ForecastListLoader(getActivity(),
 					loaderBundle.getString(FORECAST_LONGTERM_URL));
@@ -347,7 +353,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	//
 	// }
 
-	public static class SunFragment extends SherlockFragment implements
+	public static class OverviewFragment extends SherlockFragment implements
 			LoaderManager.LoaderCallbacks<WeatherData> {
 
 		private View rootview;
@@ -362,13 +368,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 		 * Create a new instance of HourByHourFragment, providing "pos" as an
 		 * argument.
 		 */
-		static SunFragment newInstance(int pos) {
-			SunFragment fragment = new SunFragment();
+		static OverviewFragment newInstance(int pos) {
+			OverviewFragment fragment = new OverviewFragment();
 
 			Bundle args = new Bundle();
 			args.putInt("pos", pos);
 			fragment.setArguments(args);
-			Log.e("DEBUGGING", "SunFragment.newInstance()");
+			Log.e("DEBUGGING", "OverviewFragment.newInstance()");
 			return fragment;
 		}
 
@@ -416,14 +422,15 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public void onLoadFinished(Loader<WeatherData> loader, WeatherData data) {
+			if (data != null) {
+				overviewSymbol.setImageResource(R.drawable.sym_06d);
+				overviewInfo.setText("overviewInfo");
+			}
 
-			overviewSymbol.setImageResource(R.drawable.sym_01n);
-			overviewInfo.setText("overviewInfo");
-
-			sunriseSymbol.setImageResource(R.drawable.sym_02n);
+			sunriseSymbol.setImageResource(R.drawable.sym_01n);
 			sunriseInfo.setText("sunriseInfo");
 
-			sunsetSymbol.setImageResource(R.drawable.sym_03n);
+			sunsetSymbol.setImageResource(R.drawable.sym_02n);
 			sunsetInfo.setText("sunsetInfo");
 		}
 
