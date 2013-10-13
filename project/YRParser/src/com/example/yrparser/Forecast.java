@@ -1,6 +1,5 @@
 package com.example.yrparser;
 
-
 public class Forecast {
 	private String label;
 	private String sunrise;
@@ -141,7 +140,11 @@ public class Forecast {
 
 	public int getIcon() {
 		int symbol = Integer.parseInt(symbolNumber);
-		int period = Integer.parseInt(timePeriod);
+		// period = 2 as default for hourbyhour forecasts
+		int period = 2;
+		if (timePeriod != null) {
+			period = Integer.parseInt(timePeriod);
+		}
 
 		switch (symbol) {
 		case 1:

@@ -31,7 +31,7 @@ public class Translater {
 		} else if (attributeValue.equals("Orkan")) {
 			s = "Hurricane";
 		} else {
-			s = "'Wind name not found'";
+			s = "Wind speed name";
 		}
 		return s;
 	}
@@ -65,7 +65,7 @@ public class Translater {
 		} else if (attributeValue.equals("Orkan")) {
 			s = "Hurricane";
 		} else {
-			s = "'Wind name not found'";
+			s = "Wind direction";
 		}
 		return s;
 	}

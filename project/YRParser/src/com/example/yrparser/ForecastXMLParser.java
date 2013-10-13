@@ -34,9 +34,9 @@ public class ForecastXMLParser {
 	private static final String WIND_SPEED = "windSpeed";
 	private static final String TEMPERATURE = "temperature";
 
-	public WeatherData parse(String forecastURL)
-			throws XmlPullParserException, MalformedURLException, IOException {
-
+	public WeatherData parse(String forecastURL) throws XmlPullParserException,
+			MalformedURLException, IOException {
+		Log.e("DEBUGGING", "ForecastXMLParser.parse() -> started");
 		parserFactory = XmlPullParserFactory.newInstance();
 		parser = parserFactory.newPullParser();
 		urlStream = downloadUrl(forecastURL);
@@ -62,19 +62,16 @@ public class ForecastXMLParser {
 							// save sunrise
 							sunrise = parser.getAttributeValue(i);
 							forecastContainer.setSunrise(sunrise);
-							Log.d("SUN", sunrise);
 						} else if (parser.getAttributeName(i).equals("set")) {
 							// save sunset
 							sunset = parser.getAttributeValue(i);
 							forecastContainer.setSunset(sunset);
-							Log.d("SUN", sunset);
 						}
 					}
 				}
 				if (tagName.equals(TIME)) {
 					// create new Forecast()
 					forecast = new Forecast();
-
 					for (int i = 0; i < nbrAttributes; i++) {
 						if (parser.getAttributeName(i).equals("from")) {
 							// set from time in Forecast
@@ -132,9 +129,11 @@ public class ForecastXMLParser {
 									.getAttributeValue(i));
 						} else if (parser.getAttributeName(i).equals("name")) {
 							// set wind name in Forecast
-							forecast.setWindSpeedName(Translater
-									.translateWindSpeedName(parser
-											.getAttributeValue(i)));
+							// forecast.setWindSpeedName(Translater
+							// .translateWindSpeedName(parser
+							// .getAttributeValue(i)));
+							forecast.setWindSpeedName(parser
+									.getAttributeValue(i));
 						}
 					}
 				}
@@ -161,6 +160,7 @@ public class ForecastXMLParser {
 			}
 			eventType = parser.next();
 		}
+		Log.e("DEBUGGING", "ForecastXMLParser.parse() -> ended");
 		return forecastContainer;
 	}
 

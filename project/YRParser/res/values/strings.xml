@@ -9,5 +9,7 @@
     <string name="forecast_symbol">forecast_symbol</string>
     <string name="overview">Overview</string>
     <string name="sunrise_sunset">Sun</string>
+    <string name="sunrise">Sunrise</string>
+    <string name="sunset">Sunset</string>
 
 </resources>

@@ -10,6 +10,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.support.v4.content.AsyncTaskLoader;
+import android.util.Log;
 
 public class ForecastListLoader extends AsyncTaskLoader<WeatherData> {
 	// TODO fetch from somewhere else. e.g. preferences?
@@ -24,29 +25,27 @@ public class ForecastListLoader extends AsyncTaskLoader<WeatherData> {
 
 	@Override
 	public WeatherData loadInBackground() {
+		Log.e("DEBUGGING", "ForecastListLoader.loadInBackground()");
 		WeatherData weatherData = null;
 		try {
 			weatherData = new ForecastXMLParser().parse(forecastUrl);
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e("MalformedURLException", e.getMessage());
 		} catch (XmlPullParserException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e("XmlPullParserException", e.getMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e("IOException", e.getMessage());
 		}
 
 		for (Forecast fc : weatherData) {
 			fc.generateWeatherInfo();
 		}
-
 		return weatherData;
 	}
 
 	@Override
 	public void deliverResult(WeatherData data) {
+		Log.e("DEBUGGING", "ForecastListLoader.deliverResult()");
 		if (isReset()) {
 			// An async query came in while the loader is stopped. We
 			// don't need the result.
