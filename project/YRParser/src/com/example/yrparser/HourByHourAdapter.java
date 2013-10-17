@@ -23,29 +23,30 @@ public class HourByHourAdapter extends ArrayAdapter<Forecast> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view;
-		ForecastHolder holder = null;
+		ViewHolder holder = null;
 
 		if (convertView == null) {
 			view = layoutInflater.inflate(layoutResourceId, parent, false);
 
-			holder = new ForecastHolder();
+			holder = new ViewHolder();
 			holder.imgSymbol = (ImageView) view.findViewById(R.id.symbol);
 			holder.txtInfo = (TextView) view.findViewById(R.id.info);
 
 			view.setTag(holder);
 		} else {
 			view = convertView;
-			holder = (ForecastHolder) view.getTag();
+			holder = (ViewHolder) view.getTag();
 		}
 
 		Forecast forecast = getItem(position);
-		holder.imgSymbol.setImageResource(forecast.getIcon());
+		holder.imgSymbol.setImageResource(Utils.getIcon(
+				forecast.getSymbolNumber(), forecast.getTimePeriod()));
 		holder.txtInfo.setText(forecast.getLabel());
 
 		return view;
 	}
 
-	static class ForecastHolder {
+	static class ViewHolder {
 		ImageView imgSymbol;
 		TextView txtInfo;
 	}
