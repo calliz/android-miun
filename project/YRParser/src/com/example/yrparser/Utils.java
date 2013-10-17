@@ -1,5 +1,9 @@
 package com.example.yrparser;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Utils {
 
 	public static String translateWindSpeedName(String attributeValue) {
@@ -31,7 +35,7 @@ public class Utils {
 		} else if (attributeValue.equals("Orkan")) {
 			s = "Hurricane";
 		} else {
-			s = "Wind speed name";
+			s = attributeValue;
 		}
 		return s;
 	}
@@ -65,7 +69,7 @@ public class Utils {
 		} else if (attributeValue.equals("Orkan")) {
 			s = "Hurricane";
 		} else {
-			s = "Wind direction";
+			s = attributeValue;
 		}
 		return s;
 	}
@@ -155,5 +159,31 @@ public class Utils {
 		default:
 			return R.drawable.sym_01d;
 		}
+	}
+
+	public static String convertToDate(String dateTime) {
+		Date input = null;
+		try {
+			input = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+					.parse(dateTime);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		String output = new SimpleDateFormat("yyyy-MM-dd").format(input);
+		return output;
+	}
+
+	public static String convertToTime(String dateTime) {
+		Date input = null;
+		try {
+			input = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+					.parse(dateTime);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		String output = new SimpleDateFormat("HH:mm").format(input);
+		return output;
 	}
 }

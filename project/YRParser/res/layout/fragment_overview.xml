@@ -36,25 +36,26 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            android:gravity="center_vertical|center_horizontal"
+            android:gravity="center_vertical"
             android:textStyle="bold" />
     </LinearLayout>
 
     <View
         android:id="@+id/divider"
         style="@style/HorizontalDivider"
-        android:layout_below="@id/overview_layout" />
+        android:layout_below="@id/overview_layout"
+        android:layout_centerInParent="true" />
 
     <View
         android:id="@+id/divider2"
         style="@style/VerticalDivider"
         android:layout_below="@id/divider"
-        android:layout_centerInParent="true" />
+        android:layout_centerHorizontal="true" />
 
     <LinearLayout
         android:id="@+id/sunview_col1"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/divider"
         android:layout_toLeftOf="@id/divider2"
         android:orientation="vertical"
@@ -84,14 +85,14 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            android:gravity="center_vertical|center_horizontal"
+            android:gravity="center_vertical"
             android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/sunview_col2"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/divider"
         android:layout_toRightOf="@id/divider2"
         android:orientation="vertical"
@@ -121,7 +122,7 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            android:gravity="center_vertical|center_horizontal"
+            android:gravity="center_vertical"
             android:textStyle="bold" />
     </LinearLayout>
 

@@ -423,15 +423,27 @@ public class MainActivity extends SherlockFragmentActivity implements
 		@Override
 		public void onLoadFinished(Loader<WeatherData> loader, WeatherData data) {
 			if (data != null) {
-				overviewSymbol.setImageResource(R.drawable.sym_06d);
-				overviewInfo.setText("overviewInfo");
+				int res;
+				String text;
+				Forecast overviewForecast = data.getOverviewForecast();
+				if (overviewForecast != null) {
+					res = Utils.getIcon(overviewForecast.getSymbolNumber(),
+							overviewForecast.getTimePeriod());
+					text = overviewForecast.getLabel();
+				} else {
+					res = R.drawable.sym_01d;
+					text = "No forecast is available";
+				}
+				overviewSymbol.setImageResource(res);
+				overviewInfo.setText(text);
+
+				sunriseSymbol.setImageResource(R.drawable.sym_01n);
+				sunriseInfo.setText(data.getSunrise());
+
+				sunsetSymbol.setImageResource(R.drawable.sym_02n);
+				sunsetInfo.setText(data.getSunset());
 			}
 
-			sunriseSymbol.setImageResource(R.drawable.sym_01n);
-			sunriseInfo.setText("sunriseInfo");
-
-			sunsetSymbol.setImageResource(R.drawable.sym_02n);
-			sunsetInfo.setText("sunsetInfo");
 		}
 
 		@Override

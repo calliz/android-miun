@@ -26,6 +26,14 @@ public class WeatherData implements Iterable<Forecast> {
 		return sunset;
 	}
 
+	public Forecast getOverviewForecast() {
+		if (forecastList.isEmpty()) {
+			return null;
+		}
+		return forecastList.get(0);
+
+	}
+
 	public void setSunrise(String sunrise) {
 		this.sunrise = sunrise;
 	}

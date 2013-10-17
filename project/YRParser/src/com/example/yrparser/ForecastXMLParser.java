@@ -5,9 +5,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -61,11 +58,17 @@ public class ForecastXMLParser {
 						if (parser.getAttributeName(i).equals("rise")) {
 							// save sunrise
 							sunrise = parser.getAttributeValue(i);
-							forecastContainer.setSunrise(sunrise);
+							forecastContainer.setSunrise(Utils
+									.convertToDate(sunrise)
+									+ "\n"
+									+ Utils.convertToTime(sunrise));
 						} else if (parser.getAttributeName(i).equals("set")) {
 							// save sunset
 							sunset = parser.getAttributeValue(i);
-							forecastContainer.setSunset(sunset);
+							forecastContainer.setSunset(Utils
+									.convertToDate(sunset)
+									+ "\n"
+									+ Utils.convertToTime(sunset));
 						}
 					}
 				}
@@ -75,15 +78,15 @@ public class ForecastXMLParser {
 					for (int i = 0; i < nbrAttributes; i++) {
 						if (parser.getAttributeName(i).equals("from")) {
 							// set from time in Forecast
-							forecast.setTimeFrom(convertToTime(parser
+							forecast.setTimeFrom(Utils.convertToTime(parser
 									.getAttributeValue(i)));
-							forecast.setDateFrom(convertToDate(parser
+							forecast.setDateFrom(Utils.convertToDate(parser
 									.getAttributeValue(i)));
 						} else if (parser.getAttributeName(i).equals("to")) {
 							// set to time in Forecast
-							forecast.setTimeTo(convertToTime(parser
+							forecast.setTimeTo(Utils.convertToTime(parser
 									.getAttributeValue(i)));
-							forecast.setDateTo(convertToDate(parser
+							forecast.setDateTo(Utils.convertToDate(parser
 									.getAttributeValue(i)));
 						} else if (parser.getAttributeName(i).equals("period")) {
 							// set period in Forecast
@@ -174,31 +177,4 @@ public class ForecastXMLParser {
 		InputStream stream = conn.getInputStream();
 		return stream;
 	}
-
-	private String convertToDate(String dateTime) {
-		Date input = null;
-		try {
-			input = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-					.parse(dateTime);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-
-		String output = new SimpleDateFormat("yyyy-MM-dd").format(input);
-		return output;
-	}
-
-	private String convertToTime(String dateTime) {
-		Date input = null;
-		try {
-			input = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-					.parse(dateTime);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-
-		String output = new SimpleDateFormat("HH:mm").format(input);
-		return output;
-	}
-
 }
