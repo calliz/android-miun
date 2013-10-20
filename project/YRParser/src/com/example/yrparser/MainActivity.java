@@ -1,19 +1,26 @@
 package com.example.yrparser;
 
+import android.location.Address;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 public class MainActivity extends SherlockFragmentActivity implements
-		ActionBar.TabListener {
+		ActionBar.TabListener, LoaderManager.LoaderCallbacks<Address> {
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -35,10 +42,18 @@ public class MainActivity extends SherlockFragmentActivity implements
 	static final String FORECAST_LONGTERM_URL = "http://www.yr.no/place/Sweden/Scania/Malm%C3%B6/forecast.xml";
 	static final String FORECAST_OVERVIEW_URL = "http://www.yr.no/place/Sweden/Scania/Malm%C3%B6/forecast.xml";
 
+	// GPSTracker class
+	GPSTracker gpsTracker;
+
+	private String CURRENT_LOCATION;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		// fetch location directly to avoid nullpointers
+		fetchCurrentLocation();
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections
@@ -85,6 +100,108 @@ public class MainActivity extends SherlockFragmentActivity implements
 					.setText(myFragmentAdapter.getPageTitle(i))
 					.setTabListener(this));
 		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.current_location, menu);
+		// MenuItem someMenuItem = menu.getItem(R.id.menu_option_id);
+		// someMenuItem.setActionView(theView);
+		// return true;
+		//
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle presses on the action bar items
+		switch (item.getItemId()) {
+		case R.id.find_current_location:
+			fetchCurrentLocation();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private void fetchCurrentLocation() {
+		// create class object
+		gpsTracker = new GPSTracker(this);
+
+		// check if GPS enabled
+		if (gpsTracker.canGetLocation()) {
+			getLocationAndConvertToAddress();
+		} else {
+			// can't get location
+			// GPS or Network is not enabled
+			// Ask user to enable GPS/network in settings
+			gpsTracker.showSettingsAlert();
+		}
+
+	}
+
+	private void getLocationAndConvertToAddress() {
+
+		// Prepare the loader. Either re-connect with an existing one,
+		// or start a new one.
+
+		// Bundle loaderBundle = new Bundle();
+		// loaderBundle.putDoubleArray(GPS_LOCATION, new double[] {
+		// gpsTracker.latitude, gpsTracker.longitude });
+		getSupportLoaderManager().initLoader(0, null, this);
+	}
+
+	@Override
+	public Loader<Address> onCreateLoader(int id, Bundle loaderBundle) {
+		Log.d("DEBUGGING", "AndroidGPSTRackingActivity.onCreateLoader()");
+		return new ReverseGeocodingLoader(this, gpsTracker.latitude,
+				gpsTracker.longitude);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Address> loader, Address address) {
+		if (address != null) {
+
+			String stringLatitude = String.valueOf(address.getLatitude());
+
+			String stringLongitude = String.valueOf(address.getLongitude());
+
+			String country = String.valueOf(address.getCountryName());
+
+			String city = String.valueOf(address.getLocality());
+
+			String postalCode = String.valueOf(address.getPostalCode());
+
+			String addressLine = String.valueOf(address.getAddressLine(0));
+
+			String out = String
+					.format("Lat: %s%nLong: %s%nCountry: %s%nCity: %s%nPostal code: %s%nStreet address: %s%n",
+							stringLatitude, stringLongitude, country, city,
+							postalCode, addressLine);
+
+			Log.d("RESULT", out);
+
+			if (city != "null" && country != "null") {
+				Toast.makeText(getApplicationContext(),
+						"Your Location is - " + city + ", " + country,
+						Toast.LENGTH_LONG).show();
+				CURRENT_LOCATION = city;
+			}
+		} else {
+			Log.e("FAILED", "Address is null");
+			Toast.makeText(getApplicationContext(),
+					"Your Location could not be found", Toast.LENGTH_LONG)
+					.show();
+		}
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Address> arg0) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override

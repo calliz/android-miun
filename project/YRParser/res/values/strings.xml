@@ -11,5 +11,6 @@
     <string name="sunrise_sunset">Sun</string>
     <string name="sunrise">Sunrise</string>
     <string name="sunset">Sunset</string>
+    <string name="current_location">Current Location</string>
 
 </resources>
