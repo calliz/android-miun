@@ -1,5 +1,10 @@
 package com.example.yrparser;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import android.location.Address;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +17,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.widget.Toast;
+import au.com.bytecode.opencsv.CSVReader;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -45,15 +51,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 	// GPSTracker class
 	GPSTracker gpsTracker;
 
-	private String CURRENT_LOCATION;
+	static String CURRENT_LOCATION_HOUR_URL;
+	static String CURRENT_LOCATION_LONGTERM_URL;
+	static String CURRENT_LOCATION_OVERVIEW_URL;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		// fetch location directly to avoid nullpointers
-		fetchCurrentLocation();
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections
@@ -154,6 +159,49 @@ public class MainActivity extends SherlockFragmentActivity implements
 		getSupportLoaderManager().initLoader(0, null, this);
 	}
 
+	private void setupURLs(String country, String city) {
+		CSVReader reader = null;
+		String forecastxml = null;
+		try {
+			InputStream is = getResources().openRawResource(R.raw.sverige);
+			reader = new CSVReader(new InputStreamReader(is), '\t');
+
+			String[] nextLine;
+			boolean done = false;
+			while ((nextLine = reader.readNext()) != null && !done) {
+				// nextLine[] is an array of values from the line
+				if (nextLine[1].equals(city)) {
+					Log.d("FOUND CITY", nextLine[1]);
+					forecastxml = nextLine[17];
+					done = true;
+				}
+			}
+
+			if (forecastxml != null) {
+
+				String baseUrl = forecastxml.substring(0,
+						forecastxml.length() - 4);
+				Log.d("baseUrl", baseUrl);
+
+				CURRENT_LOCATION_HOUR_URL = baseUrl + "_hour_by_hour.xml";
+				CURRENT_LOCATION_LONGTERM_URL = forecastxml;
+				CURRENT_LOCATION_OVERVIEW_URL = forecastxml;
+
+				Log.d("URLS", "CURRENT_LOCATION_HOUR_URL: "
+						+ CURRENT_LOCATION_HOUR_URL);
+				Log.d("URLS", "CURRENT_LOCATION_LONGTERM_URL: "
+						+ CURRENT_LOCATION_LONGTERM_URL);
+				Log.d("URLS", "CURRENT_LOCATION_OVERVIEW_URL: "
+						+ CURRENT_LOCATION_OVERVIEW_URL);
+			}
+
+		} catch (FileNotFoundException e) {
+			Log.e("FILENOTFOUND", "FILENOTFOUND");
+		} catch (IOException e) {
+			Log.e("IOEXCEPTION", "IOEXCEPTION");
+		}
+	}
+
 	@Override
 	public Loader<Address> onCreateLoader(int id, Bundle loaderBundle) {
 		Log.d("DEBUGGING", "AndroidGPSTRackingActivity.onCreateLoader()");
@@ -188,7 +236,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 				Toast.makeText(getApplicationContext(),
 						"Your Location is - " + city + ", " + country,
 						Toast.LENGTH_LONG).show();
-				CURRENT_LOCATION = city;
+				setupURLs(country, city);
 			}
 		} else {
 			Log.e("FAILED", "Address is null");

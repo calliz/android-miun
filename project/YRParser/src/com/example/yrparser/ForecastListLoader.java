@@ -27,18 +27,20 @@ public class ForecastListLoader extends AsyncTaskLoader<WeatherData> {
 	public WeatherData loadInBackground() {
 		Log.e("DEBUGGING", "ForecastListLoader.loadInBackground()");
 		WeatherData weatherData = null;
-		try {
-			weatherData = new ForecastXMLParser().parse(forecastUrl);
-		} catch (MalformedURLException e) {
-			Log.e("MalformedURLException", e.getMessage());
-		} catch (XmlPullParserException e) {
-			Log.e("XmlPullParserException", e.getMessage());
-		} catch (IOException e) {
-			Log.e("IOException", e.getMessage());
-		}
+		if (forecastUrl != null) {
+			try {
+				weatherData = new ForecastXMLParser().parse(forecastUrl);
+			} catch (MalformedURLException e) {
+				Log.e("MalformedURLException", e.getMessage());
+			} catch (XmlPullParserException e) {
+				Log.e("XmlPullParserException", e.getMessage());
+			} catch (IOException e) {
+				Log.e("IOException", e.getMessage());
+			}
 
-		for (Forecast fc : weatherData) {
-			fc.generateWeatherInfo();
+			for (Forecast fc : weatherData) {
+				fc.generateWeatherInfo();
+			}
 		}
 		return weatherData;
 	}

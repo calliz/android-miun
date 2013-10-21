@@ -47,12 +47,10 @@ public class OverviewFragment extends SherlockFragment implements
 				.findViewById(R.id.overview_symbol);
 		overviewInfo = (TextView) rootview.findViewById(R.id.overview_info);
 
-		sunriseSymbol = (ImageView) rootview
-				.findViewById(R.id.sunrise_symbol);
+		sunriseSymbol = (ImageView) rootview.findViewById(R.id.sunrise_symbol);
 		sunriseInfo = (TextView) rootview.findViewById(R.id.sunrise_info);
 
-		sunsetSymbol = (ImageView) rootview
-				.findViewById(R.id.sunset_symbol);
+		sunsetSymbol = (ImageView) rootview.findViewById(R.id.sunset_symbol);
 		sunsetInfo = (TextView) rootview.findViewById(R.id.sunset_info);
 
 		return rootview;
@@ -67,8 +65,8 @@ public class OverviewFragment extends SherlockFragment implements
 		// Prepare the loader. Either re-connect with an existing one,
 		// or start a new one.
 		Bundle loaderBundle = new Bundle();
-		loaderBundle
-				.putString(MainActivity.FORECAST_OVERVIEW_URL, MainActivity.FORECAST_OVERVIEW_URL);
+		loaderBundle.putString(MainActivity.CURRENT_LOCATION_OVERVIEW_URL,
+				MainActivity.CURRENT_LOCATION_OVERVIEW_URL);
 		getLoaderManager().initLoader(getArguments().getInt("pos"),
 				loaderBundle, this);
 	}
@@ -76,7 +74,8 @@ public class OverviewFragment extends SherlockFragment implements
 	@Override
 	public Loader<WeatherData> onCreateLoader(int id, Bundle loaderBundle) {
 		return new ForecastListLoader(getActivity(),
-				loaderBundle.getString(MainActivity.FORECAST_OVERVIEW_URL));
+				loaderBundle
+						.getString(MainActivity.CURRENT_LOCATION_OVERVIEW_URL));
 	}
 
 	@Override
