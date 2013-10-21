@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class HourByHourAdapter extends ArrayAdapter<Forecast> {
+	private static final String TAG = "FilterHourByHourAdapter";
 
 	private int layoutResourceId;
 	private final LayoutInflater layoutInflater;

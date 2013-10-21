@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import android.location.Address;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,7 +25,8 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 public class MainActivity extends SherlockFragmentActivity implements
-		ActionBar.TabListener, LoaderManager.LoaderCallbacks<Address> {
+		ActionBar.TabListener, LoaderManager.LoaderCallbacks<String> {
+	private static final String TAG = "FilterMainActivity";
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -44,9 +44,6 @@ public class MainActivity extends SherlockFragmentActivity implements
 	 */
 	private ViewPager viewPager;
 	private static final int NUM_TABS = 3;
-	static final String FORECAST_HOUR_URL = "http://www.yr.no/place/Sweden/Scania/Malm%C3%B6/forecast_hour_by_hour.xml";
-	static final String FORECAST_LONGTERM_URL = "http://www.yr.no/place/Sweden/Scania/Malm%C3%B6/forecast.xml";
-	static final String FORECAST_OVERVIEW_URL = "http://www.yr.no/place/Sweden/Scania/Malm%C3%B6/forecast.xml";
 
 	// GPSTracker class
 	GPSTracker gpsTracker;
@@ -104,6 +101,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			actionBar.addTab(actionBar.newTab()
 					.setText(myFragmentAdapter.getPageTitle(i))
 					.setTabListener(this));
+			Log.d(TAG, "addTab: " + i);
 		}
 	}
 
@@ -138,28 +136,25 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		// check if GPS enabled
 		if (gpsTracker.canGetLocation()) {
-			getLocationAndConvertToAddress();
+			Log.d(TAG, "gpsTracker.canGetLocation");
+
+			// Prepare the loader. Either re-connect with an existing one,
+			// or start a new one.
+
+			// Bundle loaderBundle = new Bundle();
+			// loaderBundle.putDoubleArray(GPS_LOCATION, new double[] {
+			// gpsTracker.latitude, gpsTracker.longitude });
+			getSupportLoaderManager().initLoader(viewPager.getCurrentItem(),
+					null, this);
 		} else {
 			// can't get location
 			// GPS or Network is not enabled
 			// Ask user to enable GPS/network in settings
-			gpsTracker.showSettingsAlert();
+			Log.d(TAG, "!gpsTracker.canGetLocation");
 		}
-
 	}
 
-	private void getLocationAndConvertToAddress() {
-
-		// Prepare the loader. Either re-connect with an existing one,
-		// or start a new one.
-
-		// Bundle loaderBundle = new Bundle();
-		// loaderBundle.putDoubleArray(GPS_LOCATION, new double[] {
-		// gpsTracker.latitude, gpsTracker.longitude });
-		getSupportLoaderManager().initLoader(0, null, this);
-	}
-
-	private void setupURLs(String country, String city) {
+	private void buildURLs(String city) {
 		CSVReader reader = null;
 		String forecastxml = null;
 		try {
@@ -171,7 +166,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			while ((nextLine = reader.readNext()) != null && !done) {
 				// nextLine[] is an array of values from the line
 				if (nextLine[1].equals(city)) {
-					Log.d("FOUND CITY", nextLine[1]);
+					Log.d(TAG, nextLine[1]);
 					forecastxml = nextLine[17];
 					done = true;
 				}
@@ -181,65 +176,44 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 				String baseUrl = forecastxml.substring(0,
 						forecastxml.length() - 4);
-				Log.d("baseUrl", baseUrl);
+				Log.d(TAG, baseUrl);
 
 				CURRENT_LOCATION_HOUR_URL = baseUrl + "_hour_by_hour.xml";
 				CURRENT_LOCATION_LONGTERM_URL = forecastxml;
 				CURRENT_LOCATION_OVERVIEW_URL = forecastxml;
 
-				Log.d("URLS", "CURRENT_LOCATION_HOUR_URL: "
+				Log.d(TAG, "CURRENT_LOCATION_HOUR_URL: "
 						+ CURRENT_LOCATION_HOUR_URL);
-				Log.d("URLS", "CURRENT_LOCATION_LONGTERM_URL: "
+				Log.d(TAG, "CURRENT_LOCATION_LONGTERM_URL: "
 						+ CURRENT_LOCATION_LONGTERM_URL);
-				Log.d("URLS", "CURRENT_LOCATION_OVERVIEW_URL: "
+				Log.d(TAG, "CURRENT_LOCATION_OVERVIEW_URL: "
 						+ CURRENT_LOCATION_OVERVIEW_URL);
 			}
 
 		} catch (FileNotFoundException e) {
-			Log.e("FILENOTFOUND", "FILENOTFOUND");
+			Log.e(TAG, "FILENOTFOUND");
 		} catch (IOException e) {
-			Log.e("IOEXCEPTION", "IOEXCEPTION");
+			Log.e(TAG, "IOEXCEPTION");
 		}
 	}
 
 	@Override
-	public Loader<Address> onCreateLoader(int id, Bundle loaderBundle) {
-		Log.d("DEBUGGING", "AndroidGPSTRackingActivity.onCreateLoader()");
-		return new ReverseGeocodingLoader(this, gpsTracker.latitude,
+	public Loader<String> onCreateLoader(int id, Bundle loaderBundle) {
+		Log.d(TAG, "AndroidGPSTRackingActivity.onCreateLoader()");
+		return new ReverseGeocodingLoaderJSON(this, gpsTracker.latitude,
 				gpsTracker.longitude);
 	}
 
 	@Override
-	public void onLoadFinished(Loader<Address> loader, Address address) {
-		if (address != null) {
+	public void onLoadFinished(Loader<String> loader, String city) {
+		if (city != null) {
+			Log.d(TAG, "city fetched: " + city);
 
-			String stringLatitude = String.valueOf(address.getLatitude());
-
-			String stringLongitude = String.valueOf(address.getLongitude());
-
-			String country = String.valueOf(address.getCountryName());
-
-			String city = String.valueOf(address.getLocality());
-
-			String postalCode = String.valueOf(address.getPostalCode());
-
-			String addressLine = String.valueOf(address.getAddressLine(0));
-
-			String out = String
-					.format("Lat: %s%nLong: %s%nCountry: %s%nCity: %s%nPostal code: %s%nStreet address: %s%n",
-							stringLatitude, stringLongitude, country, city,
-							postalCode, addressLine);
-
-			Log.d("RESULT", out);
-
-			if (city != "null" && country != "null") {
-				Toast.makeText(getApplicationContext(),
-						"Your Location is - " + city + ", " + country,
-						Toast.LENGTH_LONG).show();
-				setupURLs(country, city);
-			}
+			Toast.makeText(getApplicationContext(),
+					"Your Location is - " + city, Toast.LENGTH_LONG).show();
+			buildURLs(city);
 		} else {
-			Log.e("FAILED", "Address is null");
+			Log.e(TAG, "City is null");
 			Toast.makeText(getApplicationContext(),
 					"Your Location could not be found", Toast.LENGTH_LONG)
 					.show();
@@ -247,7 +221,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	}
 
 	@Override
-	public void onLoaderReset(Loader<Address> arg0) {
+	public void onLoaderReset(Loader<String> arg0) {
 		// TODO Auto-generated method stub
 
 	}
@@ -283,15 +257,18 @@ public class MainActivity extends SherlockFragmentActivity implements
 		@Override
 		public Fragment getItem(int position) {
 			switch (position) {
+			case 0:
+				Log.d(TAG, "MainActivity.getItem() -> case 0");
+				return OverviewFragment.newInstance(position);
 			case 1:
-				Log.e("DEBUGGING", "MainActivity.getItem() -> case 1");
+				Log.d(TAG, "MainActivity.getItem() -> case 1");
 				return HourByHourFragment.newInstance(position);
 			case 2:
-				Log.e("DEBUGGING", "MainActivity.getItem() -> case 2");
+				Log.d(TAG, "MainActivity.getItem() -> case 2");
 				return LongTermFragment.newInstance(position);
 			default:
-				Log.e("DEBUGGING", "MainActivity.getItem() -> case 0");
-				return OverviewFragment.newInstance(position);
+				Log.d(TAG, "MainActivity.getItem() -> case default");
+				return null;
 			}
 		}
 

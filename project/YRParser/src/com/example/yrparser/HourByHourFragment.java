@@ -7,8 +7,9 @@ import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
-public class HourByHourFragment extends SherlockListFragment
-		implements LoaderManager.LoaderCallbacks<WeatherData> {
+public class HourByHourFragment extends SherlockListFragment implements
+		LoaderManager.LoaderCallbacks<WeatherData> {
+	private static final String TAG = "FilterHourByHourFragment";
 
 	private HourByHourAdapter hourByHourAdapter;
 
@@ -22,7 +23,7 @@ public class HourByHourFragment extends SherlockListFragment
 		Bundle args = new Bundle();
 		args.putInt("pos", pos);
 		fragment.setArguments(args);
-		Log.e("DEBUGGING", "HourByHourFragment.newInstance()");
+		Log.d(TAG, "HourByHourFragment.newInstance()");
 		return fragment;
 	}
 
@@ -51,7 +52,8 @@ public class HourByHourFragment extends SherlockListFragment
 		// or start a new one.
 
 		Bundle loaderBundle = new Bundle();
-		loaderBundle.putString(MainActivity.FORECAST_HOUR_URL, MainActivity.FORECAST_HOUR_URL);
+		loaderBundle.putString(MainActivity.CURRENT_LOCATION_HOUR_URL,
+				MainActivity.CURRENT_LOCATION_HOUR_URL);
 		getLoaderManager().initLoader(getArguments().getInt("pos"),
 				loaderBundle, this);
 	}
@@ -64,9 +66,9 @@ public class HourByHourFragment extends SherlockListFragment
 
 	@Override
 	public Loader<WeatherData> onCreateLoader(int id, Bundle loaderBundle) {
-		Log.e("DEBUGGING", "HourByHourFragment.onCreateLoader()");
+		Log.d(TAG, "HourByHourFragment.onCreateLoader()");
 		return new ForecastListLoader(getActivity(),
-				loaderBundle.getString(MainActivity.FORECAST_HOUR_URL));
+				loaderBundle.getString(MainActivity.CURRENT_LOCATION_HOUR_URL));
 	}
 
 	@Override

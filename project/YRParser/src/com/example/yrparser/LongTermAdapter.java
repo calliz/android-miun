@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class LongTermAdapter extends ArrayAdapter<Forecast> {
+	private static final String TAG = "FilterLongTermAdapter";
 
 	private int layoutResourceId;
 	private final LayoutInflater layoutInflater;

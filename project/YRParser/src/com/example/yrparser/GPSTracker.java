@@ -24,6 +24,8 @@ import android.util.Log;
  */
 
 public class GPSTracker extends Service implements LocationListener {
+	private static final String TAG = "FilterGPSTracker";
+
 	private final Context mContext;
 
 	// flag for GPS Status
@@ -68,6 +70,7 @@ public class GPSTracker extends Service implements LocationListener {
 
 			if (!isGPSEnabled && !isNetworkEnabled) {
 				// no network provider is enabled
+				Log.d(TAG, "No network provider enabled");
 			} else {
 				this.canGetLocation = true;
 
@@ -78,11 +81,10 @@ public class GPSTracker extends Service implements LocationListener {
 							MIN_TIME_BW_UPDATES,
 							MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
 
-					Log.d("Network", "Network");
+					Log.d(TAG, "Network");
 
 					if (locationManager != null) {
-						Log.d("LocationManager not null",
-								"LocationManager not null");
+						Log.d(TAG, "LocationManager not null");
 						location = locationManager
 								.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 						updateGPSCoordinates();
@@ -97,11 +99,10 @@ public class GPSTracker extends Service implements LocationListener {
 								MIN_TIME_BW_UPDATES,
 								MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
 
-						Log.d("GPS Enabled", "GPS Enabled");
+						Log.d(TAG, "GPS Enabled");
 
 						if (locationManager != null) {
-							Log.d("LocationManager not null",
-									"LocationManager not null");
+							Log.d(TAG, "LocationManager not null");
 							location = locationManager
 									.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 							updateGPSCoordinates();
@@ -111,8 +112,7 @@ public class GPSTracker extends Service implements LocationListener {
 			}
 		} catch (Exception e) {
 			// e.printStackTrace();
-			Log.e("Error : Location",
-					"Impossible to connect to LocationManager", e);
+			Log.e(TAG, "Impossible to connect to LocationManager", e);
 		}
 
 		return location;
@@ -122,8 +122,7 @@ public class GPSTracker extends Service implements LocationListener {
 		if (location != null) {
 			latitude = location.getLatitude();
 			longitude = location.getLongitude();
-			Log.d("updateGPSCoordinates", "latitude and longitude: " + latitude
-					+ " " + longitude);
+			Log.d(TAG, "latitude and longitude: " + latitude + " " + longitude);
 		}
 	}
 
@@ -202,96 +201,6 @@ public class GPSTracker extends Service implements LocationListener {
 
 		alertDialog.show();
 	}
-
-	// /**
-	// * Get list of address by latitude and longitude
-	// *
-	// * @return null or List<Address>
-	// */
-	// public List<Address> getGeocoderAddress(Context context) {
-	// if (location != null) {
-	// Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-	// try {
-	// List<Address> addresses = geocoder.getFromLocation(
-	// location.getLatitude(), location.getLongitude(), 1);
-	// return addresses;
-	// } catch (IOException e) {
-	// // e.printStackTrace();
-	// Log.e("Error : Geocoder", "Impossible to connect to Geocoder",
-	// e);
-	// }
-	// }
-	//
-	// return null;
-	// }
-
-	// /**
-	// * Try to get AddressLine
-	// *
-	// * @return null or addressLine
-	// */
-	// public String getAddressLine(Context context) {
-	// List<Address> addresses = getGeocoderAddress(context);
-	// if (addresses != null && addresses.size() > 0) {
-	// Address address = addresses.get(0);
-	// String addressLine = address.getAddressLine(0);
-	//
-	// return addressLine;
-	// } else {
-	// return null;
-	// }
-	// }
-	//
-	// /**
-	// * Try to get Locality
-	// *
-	// * @return null or locality
-	// */
-	// public String getLocality(Context context) {
-	// List<Address> addresses = getGeocoderAddress(context);
-	// if (addresses != null && addresses.size() > 0) {
-	// Address address = addresses.get(0);
-	// String locality = address.getLocality();
-	//
-	// return locality;
-	// } else {
-	// return null;
-	// }
-	// }
-	//
-	// /**
-	// * Try to get Postal Code
-	// *
-	// * @return null or postalCode
-	// */
-	// public String getPostalCode(Context context) {
-	// List<Address> addresses = getGeocoderAddress(context);
-	// if (addresses != null && addresses.size() > 0) {
-	// Address address = addresses.get(0);
-	// String postalCode = address.getPostalCode();
-	//
-	// return postalCode;
-	// } else {
-	// return null;
-	// }
-	// }
-	//
-	// /**
-	// * Try to get CountryName
-	// *
-	// * @return null or postalCode
-	// */
-	// public String getCountryName(Context context) {
-	// List<Address> addresses = getGeocoderAddress(context);
-	// if (addresses != null && addresses.size() > 0) {
-	// Address address = addresses.get(0);
-	// String countryName = address.getCountryName();
-	//
-	// return countryName;
-	// } else {
-	// return null;
-	// }
-	// }
 
 	@Override
 	public void onLocationChanged(Location location) {

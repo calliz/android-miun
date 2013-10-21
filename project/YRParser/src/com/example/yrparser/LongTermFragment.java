@@ -9,6 +9,7 @@ import com.actionbarsherlock.app.SherlockListFragment;
 
 public class LongTermFragment extends SherlockListFragment implements
 		LoaderManager.LoaderCallbacks<WeatherData> {
+	private static final String TAG = "FilterLongTermFragment";
 
 	private LongTermAdapter longTermAdapter;
 
@@ -22,7 +23,7 @@ public class LongTermFragment extends SherlockListFragment implements
 		Bundle args = new Bundle();
 		args.putInt("pos", pos);
 		fragment.setArguments(args);
-		Log.e("DEBUGGING", "LongTermFragment.newInstance()");
+		Log.d(TAG, "LongTermFragment.newInstance()");
 		return fragment;
 	}
 
@@ -45,8 +46,8 @@ public class LongTermFragment extends SherlockListFragment implements
 		// or start a new one.
 
 		Bundle loaderBundle = new Bundle();
-		loaderBundle
-				.putString(MainActivity.FORECAST_LONGTERM_URL, MainActivity.FORECAST_LONGTERM_URL);
+		loaderBundle.putString(MainActivity.CURRENT_LOCATION_LONGTERM_URL,
+				MainActivity.CURRENT_LOCATION_LONGTERM_URL);
 		getLoaderManager().initLoader(getArguments().getInt("pos"),
 				loaderBundle, this);
 	}
@@ -60,7 +61,8 @@ public class LongTermFragment extends SherlockListFragment implements
 	@Override
 	public Loader<WeatherData> onCreateLoader(int id, Bundle loaderBundle) {
 		return new ForecastListLoader(getActivity(),
-				loaderBundle.getString(MainActivity.FORECAST_LONGTERM_URL));
+				loaderBundle
+						.getString(MainActivity.CURRENT_LOCATION_LONGTERM_URL));
 	}
 
 	@Override

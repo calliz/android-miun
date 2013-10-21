@@ -13,6 +13,7 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
 public class ForecastListLoader extends AsyncTaskLoader<WeatherData> {
+	private static final String TAG = "FilterForecastListLoader";
 	// TODO fetch from somewhere else. e.g. preferences?
 	InterestingConfigChanges lastConfig = new InterestingConfigChanges();
 	private String forecastUrl;
@@ -25,17 +26,17 @@ public class ForecastListLoader extends AsyncTaskLoader<WeatherData> {
 
 	@Override
 	public WeatherData loadInBackground() {
-		Log.e("DEBUGGING", "ForecastListLoader.loadInBackground()");
+		Log.d(TAG, "ForecastListLoader.loadInBackground()");
 		WeatherData weatherData = null;
 		if (forecastUrl != null) {
 			try {
 				weatherData = new ForecastXMLParser().parse(forecastUrl);
 			} catch (MalformedURLException e) {
-				Log.e("MalformedURLException", e.getMessage());
+				Log.e(TAG, e.getMessage());
 			} catch (XmlPullParserException e) {
-				Log.e("XmlPullParserException", e.getMessage());
+				Log.e(TAG, e.getMessage());
 			} catch (IOException e) {
-				Log.e("IOException", e.getMessage());
+				Log.e(TAG, e.getMessage());
 			}
 
 			for (Forecast fc : weatherData) {
@@ -47,7 +48,7 @@ public class ForecastListLoader extends AsyncTaskLoader<WeatherData> {
 
 	@Override
 	public void deliverResult(WeatherData data) {
-		Log.e("DEBUGGING", "ForecastListLoader.deliverResult()");
+		Log.d(TAG, "ForecastListLoader.deliverResult()");
 		if (isReset()) {
 			// An async query came in while the loader is stopped. We
 			// don't need the result.

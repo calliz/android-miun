@@ -14,6 +14,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 public class OverviewFragment extends SherlockFragment implements
 		LoaderManager.LoaderCallbacks<WeatherData> {
+	private static final String TAG = "FilterOverviewFragment";
 
 	private View rootview;
 	private ImageView sunriseSymbol;
@@ -33,7 +34,7 @@ public class OverviewFragment extends SherlockFragment implements
 		Bundle args = new Bundle();
 		args.putInt("pos", pos);
 		fragment.setArguments(args);
-		Log.e("DEBUGGING", "OverviewFragment.newInstance()");
+		Log.d(TAG, "OverviewFragment.newInstance()");
 		return fragment;
 	}
 

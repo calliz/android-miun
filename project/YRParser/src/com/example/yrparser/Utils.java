@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Utils {
+	private static final String TAG = "FilterUtils";
 
 	public static String translateWindSpeedName(String attributeValue) {
 		String s = null;

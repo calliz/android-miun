@@ -13,6 +13,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import android.util.Log;
 
 public class ForecastXMLParser {
+	private static final String TAG = "FilterForecastXMLParser";
 	private XmlPullParserFactory parserFactory;
 	private XmlPullParser parser;
 
@@ -33,7 +34,7 @@ public class ForecastXMLParser {
 
 	public WeatherData parse(String forecastURL) throws XmlPullParserException,
 			MalformedURLException, IOException {
-		Log.e("DEBUGGING", "ForecastXMLParser.parse() -> started");
+		Log.d(TAG, "ForecastXMLParser.parse() -> started");
 		parserFactory = XmlPullParserFactory.newInstance();
 		parser = parserFactory.newPullParser();
 		urlStream = downloadUrl(forecastURL);
@@ -163,7 +164,7 @@ public class ForecastXMLParser {
 			}
 			eventType = parser.next();
 		}
-		Log.e("DEBUGGING", "ForecastXMLParser.parse() -> ended");
+		Log.d(TAG, "ForecastXMLParser.parse() -> ended");
 		return forecastContainer;
 	}
 
