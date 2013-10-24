@@ -1,4 +1,4 @@
-package com.example.yrparser;
+package com.example.yr.parsing;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

@@ -1,79 +1,50 @@
-package com.example.yrparser;
+package com.example.yr.locationhanding;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
+import java.io.InputStream;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.location.Address;
-import android.location.Geocoder;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
 @SuppressLint("NewApi")
-public class ReverseGeocodingLoader extends AsyncTaskLoader<Address> {
-	private static final String TAG = "FilterReverseGeocodingLoader";
+public class ReverseGeocodingLoaderJSON extends AsyncTaskLoader<String> {
+	private static final String TAG = "FilterReverseGeocodingLoaderJSON";
 	InterestingConfigChanges lastConfig = new InterestingConfigChanges();
-	private Address address;
-	private Geocoder geocoder;
+	private String city;
 	private double lat;
 	private double lon;
 
-	public ReverseGeocodingLoader(Context context, double lat, double lon) {
+	public ReverseGeocodingLoaderJSON(Context context, double lat, double lon) {
 		super(context);
 		this.lat = lat;
 		this.lon = lon;
 	}
 
 	@Override
-	public Address loadInBackground() {
-		Address adr = null;
+	public String loadInBackground() {
+		String city = getJSONAddress();
 
-		if (Geocoder.isPresent()) {
-			Log.d(TAG, "Geocoder is present");
-
-			geocoder = new Geocoder(getContext(), Locale.getDefault());
-
-			// a location might be associated with multiple addresses; so we
-			// need a
-			// list
-			List<Address> addresses = null;
-
-			try {
-				// ask the Geocoder to give a list of address for the given
-				// latitude
-				// and longitude
-				// 1 means max result - we need only 1
-
-				addresses = geocoder.getFromLocation(lat, lon, 1);
-				if (addresses == null) {
-					Log.d(TAG, "addresses is null");
-				}
-				if (addresses.isEmpty()) {
-					Log.d(TAG, "addresses is empty");
-				}
-			} catch (IOException e) {
-				adr = null;
-			}
-
-			// get the first address
-			if (addresses != null && addresses.size() > 0) {
-				adr = addresses.get(0);
-			}
-		} else {
-			Log.e(TAG, "Geocoder is not present");
-
-		}
-		return adr;
+		return city;
 	}
 
 	@Override
-	public void deliverResult(Address data) {
-		Log.d(TAG, "ReverseGeocodingLoader.deliverResult()");
+	public void deliverResult(String data) {
+		Log.d(TAG, "ReverseGeocodingLoaderJSON.deliverResult()");
 		if (isReset()) {
 			// An async query came in while the loader is stopped. We
 			// don't need the result.
@@ -81,8 +52,8 @@ public class ReverseGeocodingLoader extends AsyncTaskLoader<Address> {
 				onReleaseResources(data);
 			}
 		}
-		Address oldAddressData = data;
-		address = data;
+		String oldAddressData = data;
+		city = data;
 
 		if (isStarted()) {
 			// If the Loader is currently started, we can immediately
@@ -101,10 +72,10 @@ public class ReverseGeocodingLoader extends AsyncTaskLoader<Address> {
 
 	@Override
 	protected void onStartLoading() {
-		if (address != null) {
+		if (city != null) {
 			// If we currently have a result available, deliver it
 			// immediately.
-			deliverResult(address);
+			deliverResult(city);
 		}
 
 		// // Start watching for changes in the app data.
@@ -117,7 +88,7 @@ public class ReverseGeocodingLoader extends AsyncTaskLoader<Address> {
 		boolean configChange = lastConfig.applyNewConfig(getContext()
 				.getResources());
 
-		if (takeContentChanged() || address == null || configChange) {
+		if (takeContentChanged() || city == null || configChange) {
 			// If the data has changed since the last time it was loaded
 			// or is not currently available, start a load.
 			forceLoad();
@@ -131,7 +102,7 @@ public class ReverseGeocodingLoader extends AsyncTaskLoader<Address> {
 	}
 
 	@Override
-	public void onCanceled(Address data) {
+	public void onCanceled(String data) {
 		super.onCanceled(data);
 
 		// At this point we can release the resources associated with 'apps' if
@@ -151,9 +122,9 @@ public class ReverseGeocodingLoader extends AsyncTaskLoader<Address> {
 
 		// At this point we can release the resources associated with
 		// 'addressData' if needed
-		if (address != null) {
-			onReleaseResources(address);
-			address = null;
+		if (city != null) {
+			onReleaseResources(city);
+			city = null;
 		}
 
 		// // Stop monitoring for changes
@@ -167,7 +138,7 @@ public class ReverseGeocodingLoader extends AsyncTaskLoader<Address> {
 	 * Helper function to take care of releasing resources associated with an
 	 * actively loaded data set.
 	 */
-	private void onReleaseResources(Address data) {
+	private void onReleaseResources(String data) {
 		// For a simple List<> there is nothing to do. For something
 		// like a Cursor, we would close it here.
 	}
@@ -190,4 +161,62 @@ public class ReverseGeocodingLoader extends AsyncTaskLoader<Address> {
 		}
 	}
 
+	private JSONObject getLocationInfo(double lat, double lng) {
+
+		HttpGet httpGet = new HttpGet(
+				"http://maps.google.com/maps/api/geocode/json?latlng=" + lat
+						+ "," + lng + "&sensor=false");
+		HttpClient client = new DefaultHttpClient();
+		HttpResponse response;
+		StringBuilder stringBuilder = new StringBuilder();
+
+		try {
+			response = client.execute(httpGet);
+			HttpEntity entity = response.getEntity();
+			InputStream stream = entity.getContent();
+			int b;
+			while ((b = stream.read()) != -1) {
+				stringBuilder.append((char) b);
+			}
+		} catch (ClientProtocolException e) {
+		} catch (IOException e) {
+		}
+
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject = new JSONObject(stringBuilder.toString());
+		} catch (JSONException e) {
+		}
+		return jsonObject;
+	}
+
+	private String getJSONAddress() {
+		String city = null;
+
+		// get lat and lng value
+		JSONObject locationInfo = getLocationInfo(lat, lon);
+		JSONArray addressComponents;
+
+		String location_string;
+		try {
+			// Get JSON Array called "results" and then get the 0th complete
+			// object as JSON and then the JSON Array called
+			// "address_components"
+			addressComponents = locationInfo.getJSONArray("results")
+					.getJSONObject(0).getJSONArray("address_components");
+			JSONObject jsonObject;
+			for (int i = 0; i < addressComponents.length(); i++) {
+				jsonObject = addressComponents.getJSONObject(i);
+				String type = jsonObject.getJSONArray("types").getString(0);
+				if (type.equals("locality")) {
+					city = jsonObject.getString("long_name");
+					break;
+				}
+			}
+			Log.d(TAG, "city: " + city);
+		} catch (JSONException e1) {
+			Log.e(TAG, "Error when fetching city");
+		}
+		return city;
+	}
 }

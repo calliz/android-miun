@@ -1,4 +1,4 @@
-package com.example.yrparser;
+package com.example.yr.parsing;
 
 import java.util.ArrayList;
 import java.util.Iterator;

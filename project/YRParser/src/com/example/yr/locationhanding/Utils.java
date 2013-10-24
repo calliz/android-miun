@@ -1,8 +1,10 @@
-package com.example.yrparser;
+package com.example.yr.locationhanding;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.example.yrparser.R;
 
 public class Utils {
 	private static final String TAG = "FilterUtils";

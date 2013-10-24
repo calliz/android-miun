@@ -1,4 +1,4 @@
-package com.example.yrparser;
+package com.example.yr.parsing;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +9,8 @@ import java.net.URL;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
+
+import com.example.yr.locationhanding.Utils;
 
 import android.util.Log;
 

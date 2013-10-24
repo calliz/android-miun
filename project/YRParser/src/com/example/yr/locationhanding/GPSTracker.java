@@ -1,4 +1,4 @@
-package com.example.yrparser;
+package com.example.yr.locationhanding;
 
 import android.app.AlertDialog;
 import android.app.Service;
@@ -37,8 +37,8 @@ public class GPSTracker extends Service implements LocationListener {
 	boolean canGetLocation = false;
 
 	Location location;
-	double latitude;
-	double longitude;
+	public static double latitude;
+	public static double longitude;
 
 	// The minimum distance to change updates in metters
 	private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10

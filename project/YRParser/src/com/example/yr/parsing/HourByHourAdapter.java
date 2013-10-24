@@ -1,4 +1,7 @@
-package com.example.yrparser;
+package com.example.yr.parsing;
+
+import com.example.yr.locationhanding.Utils;
+import com.example.yrparser.R;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,13 +11,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class LongTermAdapter extends ArrayAdapter<Forecast> {
-	private static final String TAG = "FilterLongTermAdapter";
+public class HourByHourAdapter extends ArrayAdapter<Forecast> {
+	private static final String TAG = "FilterHourByHourAdapter";
 
 	private int layoutResourceId;
 	private final LayoutInflater layoutInflater;
 
-	public LongTermAdapter(Context context, int layoutResourceId) {
+	public HourByHourAdapter(Context context, int layoutResourceId) {
 		super(context, layoutResourceId);
 		this.layoutResourceId = layoutResourceId;
 		layoutInflater = (LayoutInflater) context

@@ -1,4 +1,4 @@
-package com.example.yrparser;
+package com.example.yr.parsing;
 
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.example.yr.locationhanding.Utils;
+import com.example.yrparser.R;
 
 public class OverviewFragment extends SherlockFragment implements
 		LoaderManager.LoaderCallbacks<WeatherData> {
