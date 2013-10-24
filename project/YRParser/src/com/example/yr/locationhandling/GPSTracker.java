@@ -1,4 +1,4 @@
-package com.example.yr.locationhanding;
+package com.example.yr.locationhandling;
 
 import android.app.AlertDialog;
 import android.app.Service;

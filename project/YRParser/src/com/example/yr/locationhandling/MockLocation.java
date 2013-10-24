@@ -1,4 +1,4 @@
-package com.example.yr.locationhanding;
+package com.example.yr.locationhandling;
 //package com.example.yrparser;
 //
 //import android.content.Context;

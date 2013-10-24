@@ -1,4 +1,4 @@
-package com.example.yr.parsing;
+package com.example.yr.fragments;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -25,8 +25,8 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.example.yr.locationhanding.GPSTracker;
-import com.example.yr.locationhanding.ReverseGeocodingLoaderJSON;
+import com.example.yr.locationhandling.GPSTracker;
+import com.example.yr.locationhandling.ReverseGeocodingLoaderJSON;
 import com.example.yrparser.R;
 
 public class MainActivity extends SherlockFragmentActivity implements

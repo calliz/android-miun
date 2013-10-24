@@ -1,4 +1,4 @@
-package com.example.yr.parsing;
+package com.example.yr.forecastcomponents;
 
 public class Forecast {
 	private String label;

@@ -1,4 +1,4 @@
-package com.example.yr.parsing;
+package com.example.yr.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -11,11 +11,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.example.yr.locationhanding.Utils;
+import com.example.yr.forecastcomponents.Forecast;
+import com.example.yr.forecastcomponents.ForecastHolder;
+import com.example.yr.locationhandling.Utils;
+import com.example.yr.parsing.ForecastListLoader;
 import com.example.yrparser.R;
 
 public class OverviewFragment extends SherlockFragment implements
-		LoaderManager.LoaderCallbacks<WeatherData> {
+		LoaderManager.LoaderCallbacks<ForecastHolder> {
 	private static final String TAG = "FilterOverviewFragment";
 
 	private View rootview;
@@ -75,14 +78,14 @@ public class OverviewFragment extends SherlockFragment implements
 	}
 
 	@Override
-	public Loader<WeatherData> onCreateLoader(int id, Bundle loaderBundle) {
+	public Loader<ForecastHolder> onCreateLoader(int id, Bundle loaderBundle) {
 		return new ForecastListLoader(getActivity(),
 				loaderBundle
 						.getString(MainActivity.CURRENT_LOCATION_OVERVIEW_URL));
 	}
 
 	@Override
-	public void onLoadFinished(Loader<WeatherData> loader, WeatherData data) {
+	public void onLoadFinished(Loader<ForecastHolder> loader, ForecastHolder data) {
 		if (data != null) {
 			int res;
 			String text;
@@ -108,7 +111,7 @@ public class OverviewFragment extends SherlockFragment implements
 	}
 
 	@Override
-	public void onLoaderReset(Loader<WeatherData> arg0) {
+	public void onLoaderReset(Loader<ForecastHolder> arg0) {
 
 	}
 }

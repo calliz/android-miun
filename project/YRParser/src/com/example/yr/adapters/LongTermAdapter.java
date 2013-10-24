@@ -1,6 +1,8 @@
-package com.example.yr.parsing;
+package com.example.yr.adapters;
 
-import com.example.yr.locationhanding.Utils;
+import com.example.yr.forecastcomponents.Forecast;
+import com.example.yr.forecastcomponents.ForecastHolder;
+import com.example.yr.locationhandling.Utils;
 import com.example.yrparser.R;
 
 import android.content.Context;
@@ -55,7 +57,7 @@ public class LongTermAdapter extends ArrayAdapter<Forecast> {
 		TextView txtInfo;
 	}
 
-	public void setData(WeatherData weatherData) {
+	public void setData(ForecastHolder weatherData) {
 		clear();
 		if (weatherData != null) {
 			for (Forecast forecast : weatherData) {

@@ -1,4 +1,4 @@
-package com.example.yr.parsing;
+package com.example.yr.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -6,10 +6,13 @@ import android.support.v4.content.Loader;
 import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.example.yr.adapters.LongTermAdapter;
+import com.example.yr.forecastcomponents.ForecastHolder;
+import com.example.yr.parsing.ForecastListLoader;
 import com.example.yrparser.R;
 
 public class LongTermFragment extends SherlockListFragment implements
-		LoaderManager.LoaderCallbacks<WeatherData> {
+		LoaderManager.LoaderCallbacks<ForecastHolder> {
 	private static final String TAG = "FilterLongTermFragment";
 
 	private LongTermAdapter longTermAdapter;
@@ -60,14 +63,14 @@ public class LongTermFragment extends SherlockListFragment implements
 	}
 
 	@Override
-	public Loader<WeatherData> onCreateLoader(int id, Bundle loaderBundle) {
+	public Loader<ForecastHolder> onCreateLoader(int id, Bundle loaderBundle) {
 		return new ForecastListLoader(getActivity(),
 				loaderBundle
 						.getString(MainActivity.CURRENT_LOCATION_LONGTERM_URL));
 	}
 
 	@Override
-	public void onLoadFinished(Loader<WeatherData> loader, WeatherData data) {
+	public void onLoadFinished(Loader<ForecastHolder> loader, ForecastHolder data) {
 		longTermAdapter.setData(data);
 		// The list should now be shown.
 		if (isResumed()) {
@@ -79,7 +82,7 @@ public class LongTermFragment extends SherlockListFragment implements
 	}
 
 	@Override
-	public void onLoaderReset(Loader<WeatherData> arg0) {
+	public void onLoaderReset(Loader<ForecastHolder> arg0) {
 		longTermAdapter.setData(null);
 
 	}

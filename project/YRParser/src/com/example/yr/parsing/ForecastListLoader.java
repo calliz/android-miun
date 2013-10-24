@@ -5,6 +5,9 @@ import java.net.MalformedURLException;
 
 import org.xmlpull.v1.XmlPullParserException;
 
+import com.example.yr.forecastcomponents.Forecast;
+import com.example.yr.forecastcomponents.ForecastHolder;
+
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -12,12 +15,12 @@ import android.content.res.Resources;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
-public class ForecastListLoader extends AsyncTaskLoader<WeatherData> {
+public class ForecastListLoader extends AsyncTaskLoader<ForecastHolder> {
 	private static final String TAG = "FilterForecastListLoader";
 	// TODO fetch from somewhere else. e.g. preferences?
 	InterestingConfigChanges lastConfig = new InterestingConfigChanges();
 	private String forecastUrl;
-	private WeatherData weatherData;
+	private ForecastHolder weatherData;
 
 	public ForecastListLoader(Context context, String forecastUrl) {
 		super(context);
@@ -25,9 +28,9 @@ public class ForecastListLoader extends AsyncTaskLoader<WeatherData> {
 	}
 
 	@Override
-	public WeatherData loadInBackground() {
+	public ForecastHolder loadInBackground() {
 		Log.d(TAG, "ForecastListLoader.loadInBackground()");
-		WeatherData weatherData = null;
+		ForecastHolder weatherData = null;
 		if (forecastUrl != null) {
 			try {
 				weatherData = new ForecastXMLParser().parse(forecastUrl);
@@ -47,7 +50,7 @@ public class ForecastListLoader extends AsyncTaskLoader<WeatherData> {
 	}
 
 	@Override
-	public void deliverResult(WeatherData data) {
+	public void deliverResult(ForecastHolder data) {
 		Log.d(TAG, "ForecastListLoader.deliverResult()");
 		if (isReset()) {
 			// An async query came in while the loader is stopped. We
@@ -56,7 +59,7 @@ public class ForecastListLoader extends AsyncTaskLoader<WeatherData> {
 				onReleaseResources(data);
 			}
 		}
-		WeatherData oldWeatherData = data;
+		ForecastHolder oldWeatherData = data;
 		weatherData = data;
 
 		if (isStarted()) {
@@ -106,7 +109,7 @@ public class ForecastListLoader extends AsyncTaskLoader<WeatherData> {
 	}
 
 	@Override
-	public void onCanceled(WeatherData data) {
+	public void onCanceled(ForecastHolder data) {
 		super.onCanceled(data);
 
 		// At this point we can release the resources associated with 'apps' if
@@ -142,7 +145,7 @@ public class ForecastListLoader extends AsyncTaskLoader<WeatherData> {
 	 * Helper function to take care of releasing resources associated with an
 	 * actively loaded data set.
 	 */
-	private void onReleaseResources(WeatherData data) {
+	private void onReleaseResources(ForecastHolder data) {
 		// For a simple List<> there is nothing to do. For something
 		// like a Cursor, we would close it here.
 	}

@@ -1,4 +1,4 @@
-package com.example.yr.locationhanding;
+package com.example.yr.locationhandling;
 
 import java.io.IOException;
 import java.io.InputStream;

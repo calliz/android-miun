@@ -1,4 +1,4 @@
-package com.example.yr.locationhanding;
+package com.example.yr.locationhandling;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
