@@ -1,4 +1,4 @@
-package com.example.yr.fragments;
+package com.example.yr;
 
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -15,7 +15,6 @@ import com.example.yr.forecastcomponents.Forecast;
 import com.example.yr.forecastcomponents.ForecastHolder;
 import com.example.yr.locationhandling.Utils;
 import com.example.yr.parsing.ForecastListLoader;
-import com.example.yrparser.R;
 
 public class OverviewFragment extends SherlockFragment implements
 		LoaderManager.LoaderCallbacks<ForecastHolder> {
@@ -85,7 +84,8 @@ public class OverviewFragment extends SherlockFragment implements
 	}
 
 	@Override
-	public void onLoadFinished(Loader<ForecastHolder> loader, ForecastHolder data) {
+	public void onLoadFinished(Loader<ForecastHolder> loader,
+			ForecastHolder data) {
 		if (data != null) {
 			int res;
 			String text;

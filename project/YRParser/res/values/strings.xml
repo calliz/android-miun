@@ -12,5 +12,12 @@
     <string name="sunrise">Sunrise</string>
     <string name="sunset">Sunset</string>
     <string name="current_location">Current Location</string>
-
+    <string name="favorite_star_image">Favorite star image</string>
+    <string name="enter_a_location">Enter a location</string>
+    <string name="enter_a_location_description">Enter a location description</string>
+    <string name="confirm">Confirm</string>
+    <string name="no_locations">No locations</string>
+    <string name="delete_location">Delete location</string>
+    <string name="insert_favorite_location">Insert favorite location</string>
+    <string name="favorite_location">Favorite location</string>
 </resources>

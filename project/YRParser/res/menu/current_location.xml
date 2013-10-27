@@ -5,5 +5,10 @@
         android:icon="@drawable/current_location"
         android:showAsAction="always"
         android:title="@string/current_location"/>
+    <item
+        android:id="@+id/add_favorite_location"
+        android:icon="@drawable/favorite_star"
+        android:showAsAction="always"
+        android:title="@string/favorite_location"/>
 
 </menu>

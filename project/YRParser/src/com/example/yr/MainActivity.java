@@ -1,4 +1,4 @@
-package com.example.yr.fragments;
+package com.example.yr;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,6 +17,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import au.com.bytecode.opencsv.CSVReader;
@@ -27,7 +29,6 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.example.yr.locationhandling.GPSTracker;
 import com.example.yr.locationhandling.ReverseGeocodingLoaderJSON;
-import com.example.yrparser.R;
 
 public class MainActivity extends SherlockFragmentActivity implements
 		ActionBar.TabListener, LoaderManager.LoaderCallbacks<String> {
@@ -139,9 +140,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Log.d(TAG, "onOptionsItemSelected id");
 		// Handle presses on the action bar items
 		switch (item.getItemId()) {
 		case R.id.find_current_location:
+			Log.d(TAG, "case R.id.find_current_location");
 			try {
 				fetchCurrentLocation();
 			} catch (IllegalArgumentException e) {
@@ -158,6 +161,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 				e.printStackTrace();
 			}
 			return true;
+		case R.id.add_favorite_location:
+			Log.d(TAG, "case R.id.add_favorite_location");
+			Intent newActivity = new Intent(getApplicationContext(),
+					SettingsOverviewActivity.class);
+			startActivity(newActivity);
 		default:
 			return super.onOptionsItemSelected(item);
 		}

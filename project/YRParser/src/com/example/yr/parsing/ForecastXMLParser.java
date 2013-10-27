@@ -10,11 +10,11 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import android.util.Log;
+
 import com.example.yr.forecastcomponents.Forecast;
 import com.example.yr.forecastcomponents.ForecastHolder;
 import com.example.yr.locationhandling.Utils;
-
-import android.util.Log;
 
 public class ForecastXMLParser {
 	private static final String TAG = "FilterForecastXMLParser";

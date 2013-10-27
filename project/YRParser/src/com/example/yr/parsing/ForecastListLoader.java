@@ -5,15 +5,15 @@ import java.net.MalformedURLException;
 
 import org.xmlpull.v1.XmlPullParserException;
 
-import com.example.yr.forecastcomponents.Forecast;
-import com.example.yr.forecastcomponents.ForecastHolder;
-
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
+
+import com.example.yr.forecastcomponents.Forecast;
+import com.example.yr.forecastcomponents.ForecastHolder;
 
 public class ForecastListLoader extends AsyncTaskLoader<ForecastHolder> {
 	private static final String TAG = "FilterForecastListLoader";

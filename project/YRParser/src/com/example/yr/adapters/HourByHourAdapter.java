@@ -1,10 +1,5 @@
 package com.example.yr.adapters;
 
-import com.example.yr.forecastcomponents.Forecast;
-import com.example.yr.forecastcomponents.ForecastHolder;
-import com.example.yr.locationhandling.Utils;
-import com.example.yrparser.R;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +7,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.yr.R;
+import com.example.yr.R.id;
+import com.example.yr.forecastcomponents.Forecast;
+import com.example.yr.forecastcomponents.ForecastHolder;
+import com.example.yr.locationhandling.Utils;
 
 public class HourByHourAdapter extends ArrayAdapter<Forecast> {
 	private static final String TAG = "FilterHourByHourAdapter";

@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.example.yrparser.R;
+import com.example.yr.R;
 
 public class Utils {
 	private static final String TAG = "FilterUtils";
