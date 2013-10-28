@@ -13,36 +13,36 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
-public class MyTodoContentProvider extends ContentProvider {
+public class MyLocationContentProvider extends ContentProvider {
 
 	// database
-	private TodoDatabaseHelper database;
+	private LocationDatabaseHelper database;
 
 	// used for the UriMacher
-	private static final int TODOS = 10;
-	private static final int TODO_ID = 20;
+	private static final int LOCATIONS = 10;
+	private static final int LOCATION_ID = 20;
 
-	private static final String AUTHORITY = "de.vogella.android.todos.contentprovider";
+	private static final String AUTHORITY = "com.example.yr.settings";
 
-	private static final String BASE_PATH = "todos";
+	private static final String BASE_PATH = "locations";
 	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY
 			+ "/" + BASE_PATH);
 
 	public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
-			+ "/todos";
+			+ "/locations";
 	public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
-			+ "/todo";
+			+ "/location";
 
 	private static final UriMatcher sURIMatcher = new UriMatcher(
 			UriMatcher.NO_MATCH);
 	static {
-		sURIMatcher.addURI(AUTHORITY, BASE_PATH, TODOS);
-		sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/#", TODO_ID);
+		sURIMatcher.addURI(AUTHORITY, BASE_PATH, LOCATIONS);
+		sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/#", LOCATION_ID);
 	}
 
 	@Override
 	public boolean onCreate() {
-		database = new TodoDatabaseHelper(getContext());
+		database = new LocationDatabaseHelper(getContext());
 		return false;
 	}
 
@@ -57,15 +57,15 @@ public class MyTodoContentProvider extends ContentProvider {
 		checkColumns(projection);
 
 		// Set the table
-		queryBuilder.setTables(TodoTable.TABLE_TODO);
+		queryBuilder.setTables(LocationTable.TABLE_LOCATION);
 
 		int uriType = sURIMatcher.match(uri);
 		switch (uriType) {
-		case TODOS:
+		case LOCATIONS:
 			break;
-		case TODO_ID:
+		case LOCATION_ID:
 			// adding the ID to the original query
-			queryBuilder.appendWhere(TodoTable.COLUMN_ID + "="
+			queryBuilder.appendWhere(LocationTable.COLUMN_ID + "="
 					+ uri.getLastPathSegment());
 			break;
 		default:
@@ -90,11 +90,10 @@ public class MyTodoContentProvider extends ContentProvider {
 	public Uri insert(Uri uri, ContentValues values) {
 		int uriType = sURIMatcher.match(uri);
 		SQLiteDatabase sqlDB = database.getWritableDatabase();
-		int rowsDeleted = 0;
 		long id = 0;
 		switch (uriType) {
-		case TODOS:
-			id = sqlDB.insert(TodoTable.TABLE_TODO, null, values);
+		case LOCATIONS:
+			id = sqlDB.insert(LocationTable.TABLE_LOCATION, null, values);
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
@@ -109,19 +108,19 @@ public class MyTodoContentProvider extends ContentProvider {
 		SQLiteDatabase sqlDB = database.getWritableDatabase();
 		int rowsDeleted = 0;
 		switch (uriType) {
-		case TODOS:
-			rowsDeleted = sqlDB.delete(TodoTable.TABLE_TODO, selection,
+		case LOCATIONS:
+			rowsDeleted = sqlDB.delete(LocationTable.TABLE_LOCATION, selection,
 					selectionArgs);
 			break;
-		case TODO_ID:
+		case LOCATION_ID:
 			String id = uri.getLastPathSegment();
 			if (TextUtils.isEmpty(selection)) {
-				rowsDeleted = sqlDB.delete(TodoTable.TABLE_TODO,
-						TodoTable.COLUMN_ID + "=" + id, null);
+				rowsDeleted = sqlDB.delete(LocationTable.TABLE_LOCATION,
+						LocationTable.COLUMN_ID + "=" + id, null);
 			} else {
-				rowsDeleted = sqlDB.delete(TodoTable.TABLE_TODO,
-						TodoTable.COLUMN_ID + "=" + id + " and " + selection,
-						selectionArgs);
+				rowsDeleted = sqlDB.delete(LocationTable.TABLE_LOCATION,
+						LocationTable.COLUMN_ID + "=" + id + " and "
+								+ selection, selectionArgs);
 			}
 			break;
 		default:
@@ -139,19 +138,19 @@ public class MyTodoContentProvider extends ContentProvider {
 		SQLiteDatabase sqlDB = database.getWritableDatabase();
 		int rowsUpdated = 0;
 		switch (uriType) {
-		case TODOS:
-			rowsUpdated = sqlDB.update(TodoTable.TABLE_TODO, values, selection,
-					selectionArgs);
+		case LOCATIONS:
+			rowsUpdated = sqlDB.update(LocationTable.TABLE_LOCATION, values,
+					selection, selectionArgs);
 			break;
-		case TODO_ID:
+		case LOCATION_ID:
 			String id = uri.getLastPathSegment();
 			if (TextUtils.isEmpty(selection)) {
-				rowsUpdated = sqlDB.update(TodoTable.TABLE_TODO, values,
-						TodoTable.COLUMN_ID + "=" + id, null);
+				rowsUpdated = sqlDB.update(LocationTable.TABLE_LOCATION,
+						values, LocationTable.COLUMN_ID + "=" + id, null);
 			} else {
-				rowsUpdated = sqlDB.update(TodoTable.TABLE_TODO, values,
-						TodoTable.COLUMN_ID + "=" + id + " and " + selection,
-						selectionArgs);
+				rowsUpdated = sqlDB.update(LocationTable.TABLE_LOCATION,
+						values, LocationTable.COLUMN_ID + "=" + id + " and "
+								+ selection, selectionArgs);
 			}
 			break;
 		default:
@@ -162,9 +161,8 @@ public class MyTodoContentProvider extends ContentProvider {
 	}
 
 	private void checkColumns(String[] projection) {
-		String[] available = { TodoTable.COLUMN_CATEGORY,
-				TodoTable.COLUMN_SUMMARY, TodoTable.COLUMN_DESCRIPTION,
-				TodoTable.COLUMN_ID };
+		String[] available = { LocationTable.COLUMN_SUMMARY,
+				LocationTable.COLUMN_ID };
 		if (projection != null) {
 			HashSet<String> requestedColumns = new HashSet<String>(
 					Arrays.asList(projection));

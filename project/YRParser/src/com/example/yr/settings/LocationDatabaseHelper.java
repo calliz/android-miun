@@ -4,19 +4,19 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class TodoDatabaseHelper extends SQLiteOpenHelper {
+public class LocationDatabaseHelper extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "todotable.db";
 	private static final int DATABASE_VERSION = 1;
 
-	public TodoDatabaseHelper(Context context) {
+	public LocationDatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
 	// Method is called during creation of the database
 	@Override
 	public void onCreate(SQLiteDatabase database) {
-		TodoTable.onCreate(database);
+		LocationTable.onCreate(database);
 	}
 
 	// Method is called during an upgrade of the database,
@@ -24,6 +24,6 @@ public class TodoDatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase database, int oldVersion,
 			int newVersion) {
-		TodoTable.onUpgrade(database, oldVersion, newVersion);
+		LocationTable.onUpgrade(database, oldVersion, newVersion);
 	}
 }

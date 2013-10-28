@@ -17,7 +17,7 @@ import com.example.yr.forecastcomponents.ForecastHolder;
 
 public class ForecastListLoader extends AsyncTaskLoader<ForecastHolder> {
 	private static final String TAG = "FilterForecastListLoader";
-	// TODO fetch from somewhere else. e.g. preferences?
+	// fetch from somewhere else. e.g. preferences?
 	InterestingConfigChanges lastConfig = new InterestingConfigChanges();
 	private String forecastUrl;
 	private ForecastHolder weatherData;
@@ -42,8 +42,10 @@ public class ForecastListLoader extends AsyncTaskLoader<ForecastHolder> {
 				Log.e(TAG, e.getMessage());
 			}
 
-			for (Forecast fc : weatherData) {
-				fc.generateWeatherInfo();
+			if (weatherData != null) {
+				for (Forecast fc : weatherData) {
+					fc.generateWeatherInfo();
+				}
 			}
 		}
 		return weatherData;

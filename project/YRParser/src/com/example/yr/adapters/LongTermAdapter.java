@@ -9,14 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.yr.R;
-import com.example.yr.R.id;
 import com.example.yr.forecastcomponents.Forecast;
 import com.example.yr.forecastcomponents.ForecastHolder;
-import com.example.yr.locationhandling.Utils;
+import com.example.yr.utils.Utils;
 
 public class LongTermAdapter extends ArrayAdapter<Forecast> {
-	private static final String TAG = "FilterLongTermAdapter";
-
 	private int layoutResourceId;
 	private final LayoutInflater layoutInflater;
 

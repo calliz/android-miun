@@ -13,14 +13,15 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.example.yr.forecastcomponents.Forecast;
 import com.example.yr.forecastcomponents.ForecastHolder;
-import com.example.yr.locationhandling.Utils;
 import com.example.yr.parsing.ForecastListLoader;
+import com.example.yr.utils.Utils;
 
 public class OverviewFragment extends SherlockFragment implements
 		LoaderManager.LoaderCallbacks<ForecastHolder> {
 	private static final String TAG = "FilterOverviewFragment";
 
 	private View rootview;
+	private TextView overviewHeader;
 	private ImageView sunriseSymbol;
 	private TextView sunriseInfo;
 	private ImageView sunsetSymbol;
@@ -45,8 +46,11 @@ public class OverviewFragment extends SherlockFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		// setRetainInstance(true);
 		rootview = inflater.inflate(R.layout.fragment_overview, container,
 				false);
+
+		overviewHeader = (TextView) rootview.findViewById(R.id.overview_header);
 
 		overviewSymbol = (ImageView) rootview
 				.findViewById(R.id.overview_symbol);
@@ -64,23 +68,15 @@ public class OverviewFragment extends SherlockFragment implements
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		// TODO implementera custom view i onCreateView enligt
-		// http://stackoverflow.com/questions/15004897/custom-adapter-for-android-fragment-with-imageview-and-textview
-
 		// Prepare the loader. Either re-connect with an existing one,
 		// or start a new one.
-		Bundle loaderBundle = new Bundle();
-		loaderBundle.putString(MainActivity.CURRENT_LOCATION_OVERVIEW_URL,
-				MainActivity.CURRENT_LOCATION_OVERVIEW_URL);
-		getLoaderManager().initLoader(getArguments().getInt("pos"),
-				loaderBundle, this);
+		getLoaderManager().initLoader(0, null, this);
 	}
 
 	@Override
 	public Loader<ForecastHolder> onCreateLoader(int id, Bundle loaderBundle) {
 		return new ForecastListLoader(getActivity(),
-				loaderBundle
-						.getString(MainActivity.CURRENT_LOCATION_OVERVIEW_URL));
+				MainActivity.CURRENT_LOCATION_OVERVIEW_URL);
 	}
 
 	@Override
@@ -98,6 +94,8 @@ public class OverviewFragment extends SherlockFragment implements
 				res = R.drawable.sym_01d;
 				text = "No forecast is available";
 			}
+
+			overviewHeader.setText("Overview for " + MainActivity.CURRENT_CITY);
 			overviewSymbol.setImageResource(res);
 			overviewInfo.setText(text);
 

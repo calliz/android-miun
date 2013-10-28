@@ -14,7 +14,7 @@ import android.util.Log;
 
 import com.example.yr.forecastcomponents.Forecast;
 import com.example.yr.forecastcomponents.ForecastHolder;
-import com.example.yr.locationhandling.Utils;
+import com.example.yr.utils.Utils;
 
 public class ForecastXMLParser {
 	private static final String TAG = "FilterForecastXMLParser";

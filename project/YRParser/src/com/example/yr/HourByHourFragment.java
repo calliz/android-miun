@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.example.yr.adapters.HourByHourAdapter;
@@ -31,6 +34,13 @@ public class HourByHourFragment extends SherlockListFragment implements
 	}
 
 	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// setRetainInstance(true);
+		return super.onCreateView(inflater, container, savedInstanceState);
+	}
+
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
@@ -40,11 +50,6 @@ public class HourByHourFragment extends SherlockListFragment implements
 		// Create an empty adapter we will use to display the loaded data.
 		hourByHourAdapter = new HourByHourAdapter(getActivity(),
 				R.layout.forecast_row);
-
-		// // Add list header
-		// View hourByHourHeaderView = getActivity().getLayoutInflater()
-		// .inflate(R.layout.hourbyhour_header, null);
-		// getListView().addHeaderView(hourByHourHeaderView);
 
 		setListAdapter(hourByHourAdapter);
 
@@ -78,6 +83,7 @@ public class HourByHourFragment extends SherlockListFragment implements
 	public void onLoadFinished(Loader<ForecastHolder> loader,
 			ForecastHolder data) {
 		hourByHourAdapter.setData(data);
+
 		// The list should now be shown.
 		if (isResumed()) {
 			setListShown(true);

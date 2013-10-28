@@ -1,4 +1,4 @@
-package com.example.yr.locationhandling;
+package com.example.yr.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -7,8 +7,6 @@ import java.util.Date;
 import com.example.yr.R;
 
 public class Utils {
-	private static final String TAG = "FilterUtils";
-
 	public static String translateWindSpeedName(String attributeValue) {
 		String s = null;
 		if (attributeValue.equals("Stille")) {

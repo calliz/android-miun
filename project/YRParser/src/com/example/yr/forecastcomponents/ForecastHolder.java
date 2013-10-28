@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 
 public class ForecastHolder implements Iterable<Forecast> {
-	private static final String TAG = "FilterWeatherData";
 	private List<Forecast> forecastList = new ArrayList<Forecast>();
 	private String sunrise;
 	private String sunset;

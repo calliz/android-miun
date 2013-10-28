@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.example.yr.adapters.LongTermAdapter;
@@ -28,6 +31,13 @@ public class LongTermFragment extends SherlockListFragment implements
 		fragment.setArguments(args);
 		Log.d(TAG, "LongTermFragment.newInstance()");
 		return fragment;
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// setRetainInstance(true);
+		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
 	@Override

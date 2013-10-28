@@ -4,9 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,8 +17,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -27,13 +25,13 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.example.yr.locationhandling.GPSTracker;
+import com.example.yr.locationhandling.MyLocation;
 import com.example.yr.locationhandling.ReverseGeocodingLoaderJSON;
+import com.example.yr.locationhandling.MyLocation.LocationResult;
 
 public class MainActivity extends SherlockFragmentActivity implements
 		ActionBar.TabListener, LoaderManager.LoaderCallbacks<String> {
 	private static final String TAG = "FilterMainActivity";
-	// private static boolean MOCK_LOCATION = true;
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -52,15 +50,14 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private ViewPager viewPager;
 	private static final int NUM_TABS = 3;
 
-	// /*
-	// * Define a request code to send to Google Play services This code is
-	// * returned in Activity.onActivityResult
-	// */
-	// private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+	private static final int LOCATION_REQ = 1;
 
-	// // GPSTracker class
-	// GPSTracker gpsTracker;
+	private static final String SET_LOCATION = null;
 
+	static double CURRENT_LAT;
+	static double CURRENT_LNG;
+	static final String CURRENT_LOCATION_DEFAULT = "Stockholm";
+	static String CURRENT_CITY;
 	static String CURRENT_LOCATION_HOUR_URL;
 	static String CURRENT_LOCATION_LONGTERM_URL;
 	static String CURRENT_LOCATION_OVERVIEW_URL;
@@ -70,17 +67,15 @@ public class MainActivity extends SherlockFragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		// // check if Google Play Services exit on device
-		// int errorCode = GooglePlayServicesUtil
-		// .isGooglePlayServicesAvailable(this);
-		// if (errorCode != ConnectionResult.SUCCESS) {
-		// GooglePlayServicesUtil.getErrorDialog(errorCode, this, 0).show();
-		// }
-
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections
 		// of the app.
 		myFragmentAdapter = new MyFragmentAdapter(getSupportFragmentManager());
+		//
+		final String savedLocation = (String) getLastCustomNonConfigurationInstance();
+		if (savedLocation == null) {
+			setDefaultLocation();
+		}
 
 		// Set up the action bar.
 		final ActionBar actionBar = getSupportActionBar();
@@ -125,16 +120,21 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 	}
 
+	private void setDefaultLocation() {
+		// set default location
+		buildURLs(CURRENT_LOCATION_DEFAULT);
+
+		// show default location message
+		Toast.makeText(getApplicationContext(),
+				"Default location is Stockholm", Toast.LENGTH_LONG).show();
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 
 		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.current_location, menu);
-		// MenuItem someMenuItem = menu.getItem(R.id.menu_option_id);
-		// someMenuItem.setActionView(theView);
-		// return true;
-		//
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -145,131 +145,75 @@ public class MainActivity extends SherlockFragmentActivity implements
 		switch (item.getItemId()) {
 		case R.id.find_current_location:
 			Log.d(TAG, "case R.id.find_current_location");
-			try {
-				fetchCurrentLocation();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			fetchCurrentLocation();
 			return true;
 		case R.id.add_favorite_location:
 			Log.d(TAG, "case R.id.add_favorite_location");
 			Intent newActivity = new Intent(getApplicationContext(),
 					SettingsOverviewActivity.class);
-			startActivity(newActivity);
+			startActivityForResult(newActivity, LOCATION_REQ);
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 
-	private void fetchCurrentLocation() throws IllegalArgumentException,
-			NoSuchMethodException, IllegalAccessException,
-			InvocationTargetException {
-		Log.d(TAG, "Fetching location");
-		// if (MOCK_LOCATION) {
-		// Log.d(TAG, "Mocking location");
-		// // mock location as LONDON
-		// try {
-		// // mockLocation(51.532669, -0.119691);
-		// } catch (IllegalArgumentException e) {
-		// Log.d(TAG, Log.getStackTraceString(e));
-		// } catch (NoSuchMethodException e) {
-		// Log.d(TAG, "NoSuchMethodException");
-		// } catch (IllegalAccessException e) {
-		// Log.d(TAG, "IllegalAccessException");
-		// } catch (InvocationTargetException e) {
-		// Log.d(TAG, "InvocationTargetException");
-		// }
-		// } else {
-		// Log.d(TAG, "Using GPSTracker");
-		// gpsTracker = new GPSTracker(this);
-		// if (gpsTracker.canGetLocation()) {
-		// Log.d(TAG, "gpsTracker.canGetLocation");
-		//
-		// // Prepare the loader. Either re-connect with an existing one,
-		// // or start a new one.
-		//
-		// // Bundle loaderBundle = new Bundle();
-		// // loaderBundle.putDoubleArray(GPS_LOCATION, new double[] {
-		// // gpsTracker.latitude, gpsTracker.longitude });
-		// getSupportLoaderManager().initLoader(
-		// viewPager.getCurrentItem(), null, this);
-		// } else {
-		// // can't get location
-		// // GPS or Network is not enabled
-		// // Ask user to enable GPS/network in settings
-		// Log.d(TAG, "!gpsTracker.canGetLocation");
-		// }
-		// }
-
-		// MockLocation mockLocation = new MockLocation();
-
-		// getSupportLoaderManager().initLoader(viewPager.getCurrentItem(),
-		// null,
-		// this);
-		RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.main_overview_layout);
-		mainLayout.setVisibility(RelativeLayout.VISIBLE);
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// Check which request we're responding to
+		if (requestCode == LOCATION_REQ) {
+			// Make sure the request was successful
+			if (resultCode == RESULT_OK) {
+				String city = data.getStringExtra(SET_LOCATION);
+				Log.d(TAG, "Received location: " + city);
+				Toast.makeText(getApplicationContext(),
+						"Your Location is - " + city, Toast.LENGTH_LONG).show();
+				buildURLs(city);
+			}
+		}
 	}
 
-	// private void mockLocation(double mockLat, double mockLng)
-	// throws NoSuchMethodException, IllegalArgumentException,
-	// IllegalAccessException, InvocationTargetException {
-	// String mocLocationProvider = null;
-	// Log.d(TAG, "Trying to mock location");
-	//
-	// LocationManager locationManager = (LocationManager)
-	// getApplicationContext()
-	// .getSystemService(Context.LOCATION_SERVICE);
-	//
-	// List<String> tmpProviders = locationManager.getAllProviders();
-	//
-	// if (!tmpProviders.isEmpty()) {
-	// mocLocationProvider = tmpProviders.toArray()[0].toString();
-	// Log.e(TAG, "MockLocationProdiver: " + mocLocationProvider);
-	// } else {
-	// Log.e(TAG, "mockLoactionProvider is null");
-	// }
-	//
-	// // Criteria criteria = new Criteria();
-	// // criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-	// // String provider = locationManager.getBestProvider(criteria, true);
-	// //
-	// // if (provider == null) {
-	// // Log.e(TAG, "No location provider found!");
-	// // return;
-	// // } else {
-	// // Log.d(TAG, "Best provider is: " + provider);
-	// // }
-	//
-	// // Location lastLocation =
-	// // locationManager.getLastKnownLocation(provider);
-	// //
-	//
-	// Location location = new Location(mocLocationProvider);
-	//
-	// Method locationJellyBeanFixMethod = Location.class
-	// .getMethod("makeComplete");
-	// if (locationJellyBeanFixMethod != null) {
-	// locationJellyBeanFixMethod.invoke(location);
-	// }
-	// location.setLatitude(mockLat);
-	// location.setLongitude(mockLng);
-	// location.setTime(System.currentTimeMillis());
-	// locationManager.setTestProviderLocation(mocLocationProvider, location);
-	// Log.d(TAG, "Mocked lat: " + location.getLatitude() + " lng: "
-	// + location.getLongitude());
-	// }
+	private void fetchCurrentLocation() {
+		Log.d(TAG, "Fetching location");
+		Toast.makeText(getApplicationContext(), "Fetching current location",
+				Toast.LENGTH_LONG).show();
+		LocationResult locationResult = new LocationResult() {
+			@Override
+			public void gotLocation(final Location location) {
+				// Got the location!
+				runOnUiThread(new Runnable() {
+					public void run() {
+						setCurrLocation(location);
+					}
+				});
+			}
+		};
+
+		MyLocation myLocation = new MyLocation();
+		myLocation.getLocation(this, locationResult);
+	}
+
+	protected void setCurrLocation(Location location) {
+		if (location != null) {
+			Log.d(TAG, "FOUND!");
+			Toast.makeText(
+					getApplicationContext(),
+					"Latitude: " + location.getLatitude() + "\n Longitude: "
+							+ location.getLongitude(), Toast.LENGTH_SHORT)
+					.show();
+			CURRENT_LAT = location.getLatitude();
+			CURRENT_LNG = location.getLongitude();
+			getSupportLoaderManager().initLoader(0, null, MainActivity.this);
+		} else {
+			Log.d(TAG, "NOT FOUND");
+			Toast.makeText(getApplicationContext(),
+					"Your Location could not be found", Toast.LENGTH_LONG)
+					.show();
+		}
+
+	}
 
 	private void buildURLs(String city) {
+		CURRENT_CITY = city;
 		CSVReader reader = null;
 		String forecastxml = null;
 		try {
@@ -303,6 +247,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 						+ CURRENT_LOCATION_LONGTERM_URL);
 				Log.d(TAG, "CURRENT_LOCATION_OVERVIEW_URL: "
 						+ CURRENT_LOCATION_OVERVIEW_URL);
+			} else {
+				Log.d(TAG, "CURRENT_LOCATION NOT FOUND!!!");
 			}
 
 		} catch (FileNotFoundException e) {
@@ -310,13 +256,13 @@ public class MainActivity extends SherlockFragmentActivity implements
 		} catch (IOException e) {
 			Log.e(TAG, "IOEXCEPTION");
 		}
+		myFragmentAdapter.notifyDataSetChanged();
 	}
 
 	@Override
 	public Loader<String> onCreateLoader(int id, Bundle loaderBundle) {
 		Log.d(TAG, "AndroidGPSTRackingActivity.onCreateLoader()");
-		return new ReverseGeocodingLoaderJSON(this, GPSTracker.latitude,
-				GPSTracker.longitude);
+		return new ReverseGeocodingLoaderJSON(this, CURRENT_LAT, CURRENT_LNG);
 	}
 
 	@Override
@@ -410,93 +356,16 @@ public class MainActivity extends SherlockFragmentActivity implements
 			}
 			return s;
 		}
+
+		@Override
+		public int getItemPosition(Object object) {
+			return POSITION_NONE;
+		}
 	}
 
-	// private class MockLocation implements LocationListener {
-	// public static final String GPS_MOCK_PROVIDER = "GpsMockProvider";
-	// private static final double LATITUDE = 51.532669;
-	// private static final double LONGITUDE = -0.119691;
-	// private static final String TAG = "MockLocation";
-	//
-	// public MockLocation() throws IllegalArgumentException,
-	// NoSuchMethodException, IllegalAccessException,
-	// InvocationTargetException {
-	// setupGps();
-	// setupLocation();
-	// }
-	//
-	// private void setupGps() {
-	// /** Setup GPS. */
-	// LocationManager locationManager = (LocationManager) MainActivity.this
-	// .getSystemService(Context.LOCATION_SERVICE);
-	//
-	// if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-	// // use real GPS provider if enabled on the device
-	// locationManager.requestLocationUpdates(
-	// LocationManager.GPS_PROVIDER, 0, 0, this);
-	// } else if (!locationManager.isProviderEnabled(GPS_MOCK_PROVIDER)) {
-	// // otherwise enable the mock GPS provider
-	// locationManager.addTestProvider(GPS_MOCK_PROVIDER, false,
-	// false, false, false, true, false, false, 0, 5);
-	// locationManager.setTestProviderEnabled(GPS_MOCK_PROVIDER, true);
-	// }
-	//
-	// if (locationManager.isProviderEnabled(GPS_MOCK_PROVIDER)) {
-	// locationManager.requestLocationUpdates(GPS_MOCK_PROVIDER, 0, 0,
-	// this);
-	// }
-	// }
-	//
-	// private void setupLocation() throws NoSuchMethodException,
-	// IllegalArgumentException, IllegalAccessException,
-	// InvocationTargetException {
-	// Location location = new Location(GPS_MOCK_PROVIDER);
-	// location.setLatitude(LATITUDE);
-	// location.setLongitude(LONGITUDE);
-	// location.setAltitude(0);
-	// location.setTime(System.currentTimeMillis());
-	// Method locationJellyBeanFixMethod = Location.class
-	// .getMethod("makeComplete");
-	// if (locationJellyBeanFixMethod != null) {
-	// locationJellyBeanFixMethod.invoke(location);
-	// }
-	//
-	// // show debug message in log
-	// Log.d(TAG, location.toString());
-	//
-	// // provide the new location
-	// LocationManager locationManager = (LocationManager) MainActivity.this
-	// .getSystemService(Context.LOCATION_SERVICE);
-	// locationManager
-	// .setTestProviderLocation(GPS_MOCK_PROVIDER, location);
-	// }
-	//
-	// private LocationManager getSystemService(String locationService) {
-	// // TODO Auto-generated method stub
-	// return null;
-	// }
-	//
-	// @Override
-	// public void onLocationChanged(Location loc) {
-	// Log.d(TAG, "Location is: " + loc.toString());
-	// }
-	//
-	// @Override
-	// public void onProviderDisabled(String arg0) {
-	// // TODO Auto-generated method stub
-	//
-	// }
-	//
-	// @Override
-	// public void onProviderEnabled(String arg0) {
-	// // TODO Auto-generated method stub
-	//
-	// }
-	//
-	// @Override
-	// public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
-	// // TODO Auto-generated method stub
-	//
-	// }
-	// }
+	@Override
+	public String onRetainCustomNonConfigurationInstance() {
+		final String savedLocation = CURRENT_CITY;
+		return savedLocation;
+	}
 }

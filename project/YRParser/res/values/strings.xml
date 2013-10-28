@@ -18,6 +18,7 @@
     <string name="confirm">Confirm</string>
     <string name="no_locations">No locations</string>
     <string name="delete_location">Delete location</string>
-    <string name="insert_favorite_location">Insert favorite location</string>
+    <string name="insert_favorite_location">Add location</string>
     <string name="favorite_location">Favorite location</string>
+    <string name="use_this_location">Use this location</string>
 </resources>

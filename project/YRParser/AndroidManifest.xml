@@ -41,7 +41,7 @@
         </activity>
 
         <provider
-            android:name=".settings.MyTodoContentProvider"
+            android:name=".settings.MyLocationContentProvider"
             android:authorities="com.example.yr.settings" >
         </provider>
     </application>

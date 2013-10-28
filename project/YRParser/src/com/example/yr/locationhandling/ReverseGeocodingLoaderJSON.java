@@ -197,7 +197,6 @@ public class ReverseGeocodingLoaderJSON extends AsyncTaskLoader<String> {
 		JSONObject locationInfo = getLocationInfo(lat, lon);
 		JSONArray addressComponents;
 
-		String location_string;
 		try {
 			// Get JSON Array called "results" and then get the 0th complete
 			// object as JSON and then the JSON Array called
